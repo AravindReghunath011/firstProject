@@ -17,6 +17,14 @@ let userModel = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    isAdmin:{
+        type:Number,
+        required:true
+    },
+    isVarified:{
+        type:Number,
+        default:0
     }
 });
 

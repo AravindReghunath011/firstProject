@@ -3,16 +3,14 @@ var router = express.Router();
 const userController = require('../controllers/userController')
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+router.get('/',userController.getHome);
 
-router.get('/login',userController.userLogin)
+router.get('/login',userController.getUserlogin)
+
+router.post('/login',userController.userLogin)
 
 router.get('/signup',userController.getSignup)
 router.post('/signup',userController.userSignup)
-router.get('/otp',(req,res)=>{
-  res.render('users/signup')
-})
+router.post('/otp/:id',userController.getOtp)
 
 module.exports = router;
