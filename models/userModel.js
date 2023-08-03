@@ -25,6 +25,10 @@ let userModel = new mongoose.Schema({
     isVarified:{
         type:Number,
         default:0
+    },
+    otp:{
+        type:String,
+        default:0
     }
 });
 
