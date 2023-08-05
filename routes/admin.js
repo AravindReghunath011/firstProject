@@ -2,25 +2,11 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer')
 var path = require('path');
+const categoryUpload = require('../multer/category')
+const productUpload = require('../multer/productMulter')
 
-
+const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categroyController')
-
-let pathname = Date.now()
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'public/upload/category');
-    },
-    filename: (req, file, cb) => {
-      console.log(Date.now());
-      console.log(path.extname(file.originalname));
-      cb(null, Date.now()+'.webp');
-    },
-});
-const upload = multer({ storage: storage });
-
-
-
 
 
 /* GET users listing. */
@@ -28,9 +14,11 @@ router.get('/', categoryController.getDashboard);
 
 router.get('/categories',categoryController.getCategory)
 
+router.post('/categories',categoryUpload.single('image'), categoryController.addCategory)
 
+router.get('/products',productController.getAddproduct)
 
+router.post('/products',productUpload.array('images',4), productController.addProducts)
 
-router.post('/categories',upload.single('image'), categoryController.addCategory)
 
 module.exports = router;

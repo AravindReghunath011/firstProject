@@ -91,57 +91,63 @@ module.exports ={
        
     },
 
-    getotpforLogin:(req,res)=>{
-        res.render('users/loginUsingOtp')
+
+    getloginOtpPage:(req,res)=>{
+        res.render('users/otpLoginPage')
     },
 
-    verifyEmail:async (req,res)=>{
+    
+    redirectToOtp:async(req,res)=>{
+        console.log('yep');
         let user = await User.findOne({email:req.body.email})
+        console.log('nop');
         if(user){
-
-
-
-            otp = Math.floor(1000 + Math.random() * 9000).toString()
-            console.log('');
-            let newuse = await User.findByIdAndUpdate(user._id,{otp:otp},{new:true})
-            console.log('heello');
-            console.log(newuse);
-            const transport = nodemailer.createTransport({
-                service:'gmail',
-                auth:{
-                    user:config.EMAIL,
-                    pass:config.PASSWORD
-                }
-            })
-            var mailObj = {
-                from:'aravindreghunath99@gmail.com',
-                to:req.body.email,
-                subject:'Future furniture otp varification',
-                text:`Thank you for choosing Future furniture. Use the following OTP to complete your Sign Up procedures. ${otp} `
-            }
-            transport.sendMail(mailObj ,async (err , status)=>{
-                if(err){
-                    console.log('Err' , err)
-                }else{
-                    res.render('users/otp4login',{id:user._id})
-                    
-                }
-            })   
+            req.session.UserLoginOtpEmail = user.email
+            res.redirect('/otpPage')
         }else{
-            res.send('Enter a valid email')
+            res.send('Enter valid email')
         }
     },
+    getOtpPage:async(req,res)=>{
 
-    verifyOtp:async(req,res)=>{
-        console.log(req.params.id);
-        let user = await User.findById(req.params.id).lean()
-        console.log(user);
-        console.log(req.body.otp.join(''));
-        if(user.otp == req.body.otp.join('')){
-            res.redirect('/')
-             
+        let user = await User.findOne({email:req.session.UserLoginOtpEmail})
+
+        if(user){
+            otp = Math.floor(1000 + Math.random() * 9000).toString()
+            req.session.loginotp =otp
+        const transport = nodemailer.createTransport({
+            service:'gmail',
+            auth:{
+                user:config.EMAIL,
+                pass:config.PASSWORD
+            }
+        })
+        var mailObj = {
+            from:'aravindreghunath99@gmail.com',
+            to:req.session.UserLoginOtpEmail,
+            subject:'Future furniture otp varification',
+            text:`Thank you for choosing Future furniture. Use the following OTP to complete your Sign Up procedures. ${otp} `
+        }
+        transport.sendMail(mailObj ,async (err , status)=>{
+            if(err){
+                console.log('Err' , err)
+            }else{
+                res.render('users/otp4login',{id:user._id})
+                
+            }
+        }) 
         }else{
-            res.send('failed')
+            res.send('error occured')
+        }
+        res.render('users/otpPage',{otpErr:req.session.otpErr})
+        req.session.otpErr = false
+    },
+    validOtp:(req,res)=>{
+        if(req.body.otp.join('')==req.session.loginotp){
+            res.send('login WIth otp success')
+        }else{
+            req.session.otpErr = true
+            res.redirect('/otpPage')
         }
     }
 

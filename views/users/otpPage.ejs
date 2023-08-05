@@ -72,15 +72,19 @@
      
       <h3>Enter OTP</h3>
       <p>We have sent a verification code to your Given email</p>
-      <form action="/otpconfirm/<%- id%>" method="post">
-        <div id='inputs'>
+      <form action="/otpPage"  method="post">
+        <div id='inputs' class="mb-4">
           <input id='input2' name="otp" type='text' maxLength="1" />
           <input id='input1' name="otp" type='text' maxLength="1" />
           <input id='input3' name="otp" type='text' maxLength="1" />
           <input id='input4' name="otp" type='text' maxLength="1" />
         </div>
-        <button type="submit">Submit</button>
+        <button class="mb-3 mt-4" type="submit">Submit</button>
+        <a  href="/otpPage"  type="button" class="btn btn-primary">Resend Otp</a>
       </form>
+      <%if(otpErr){%>
+      <label class="text-danger">Entered otp is wrong</label>
+      <% } %>
     </section>
   
     <script>

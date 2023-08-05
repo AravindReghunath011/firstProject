@@ -13,7 +13,10 @@ router.get('/signup',userController.getSignup)
 router.post('/signup',userController.userSignup)
 router.post('/otp/:id',userController.getOtp)
 
-router.get('/otpforLogin',userController.getotpforLogin)
-router.post('/otpforLogin',userController.verifyEmail)
-router.post('/otpconfirm/:id',userController.verifyOtp)
+
+
+router.get('/otpLoginPage',userController.getloginOtpPage)
+router.post('/otpLoginPage',userController.redirectToOtp)
+router.get('/otpPage',userController.getOtpPage)
+router.post('/otpPage',userController.validOtp)
 module.exports = router;

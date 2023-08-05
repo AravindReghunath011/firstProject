@@ -13,15 +13,13 @@ module.exports={
     getCategory:async(req,res)=>{
       let data = await category.find({})
       console.log(data);
+      
         res.render('admin/categories',{data:data})
     },
 
     
     addCategory:async(req,res)=>{
-        let data = await category.find()
-        console.log('add category');
-        console.log(req.body);
-
+        
         (async () => {
             const rembg = new Rembg({
               logging: true,
@@ -29,7 +27,7 @@ module.exports={
         
             try {
               // Assuming the uploaded image is stored in 'req.file.path'
-              console.log(req.file)
+              
               const input = sharp(req.file.path); 
               const output = await rembg.remove(input);
               await output.webp().toFile('./public/upload/category/'+req.file.filename);
@@ -40,7 +38,7 @@ module.exports={
           })();
 
           let newcategory = new category({
-            category:req.body.category,
+            name:req.body.category,
             basePrice:req.body.basePrice,
             description:req.body.description,
             image:req.file.filename,
