@@ -25,8 +25,20 @@ module.exports={
 
         product.save().then((status)=>{
             console.log(status);
+            res.redirect('/admin/products')
         }).catch((err)=>{
             console.log(err.message);
+            
+            req.redirect('/admin/products')
         })
+    },
+    showProducts:async(req,res)=>{
+        let products = await productModel.find({}).lean()
+        console.log('products',products);
+        res.render('users/showProducts',{products})
+    },
+    adminProductList:async(req,res)=>{
+        let product = await productModel.find({}).lean()
+        res.render('admin/admin-productList',{product})
     }
 }

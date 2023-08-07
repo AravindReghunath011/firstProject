@@ -1,9 +1,8 @@
 const User = require('../models/userModel');
 const category = require('../models/categoryModel');
-const multer = require('multer')
 const {Rembg} = require('rembg-node');
 const sharp = require('sharp');
-const busboy = require('busboy-body-parser')
+
 
 
 module.exports={

@@ -53,14 +53,27 @@ module.exports ={
         var mailObj = {
             from:'aravindreghunath99@gmail.com',
             to:req.body.email,
-            subject:'CycleShop otp varification',
-            text:`Thank you for choosing CycleShop. Use the following OTP to complete your Sign Up procedures. ${otp} `
+            subject:'Future furniture otp varification',
+            text:`Thank you for choosing Future furniture. Use the following OTP to complete your Sign Up procedures. ${otp} `
         }
         transport.sendMail(mailObj ,async (err , status)=>{
             if(err){
                 console.log('Err' , err)
             }else{
-                req.body.password = await bcrypt.hash(req.body.password,10)
+
+                res.render('users/otp' )
+                req.session.signupData = req.body
+                
+                
+            }
+        })
+
+       
+        
+    },
+    getOtp:async(req,res)=>{
+        if(req.body.otp.join('')==req.session.otp){
+            req.body.password = await bcrypt.hash(req.body.password,10)
                 let use = new User({
                     name:req.body.name,
                     email:req.body.email,
@@ -72,21 +85,15 @@ module.exports ={
 
                 await use.save().then((data)=>{
                     console.log("Sucess" , req.session)
-                    res.render('users/otp' ,{email:req.body.email , id:use._id})
+                    
                 }).catch((err)=>{
                     console.log(err);
                 })
-                
-            }
-        })
-
-       
+            res.redirect('/')
+        }else{
+            res.send('wrong otp')
+        }
         
-    },
-    getOtp:async(req,res)=>{
-        let user = await User.findByIdAndUpdate(req.params.id,{isVarified:1})
-        console.log(user);
-        res.redirect('/')
     
        
     },
