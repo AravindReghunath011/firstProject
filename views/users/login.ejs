@@ -81,8 +81,11 @@
       <div class="form-group">
               <button onclick="validate()" type="submit" class="btn btn-primary btn-lg">Send Otp</button>
               <label for="" class="ms-5"> <a href="/otpLoginPage">Login using otp</a></label>
+              <%if(err){%>
               <p id="err-msg"></p>
+              <%}%>
           </div>
+          <a href="/forgetPassword"><u>forget password?</u></a>
       </form>
     <div class="text-center">Don't have an account? <a href="/signup">Signup here</a></div>
   
