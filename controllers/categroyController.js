@@ -20,7 +20,8 @@ module.exports={
 
     
     addCategory:async(req,res)=>{
-        
+      
+        console.log(req.file);
         (async () => {
             const rembg = new Rembg({
               logging: true,
@@ -77,8 +78,9 @@ module.exports={
     },
     editCategory:async(req,res)=>{
       try{
-        console.log(req.files,'req files');
-        if(req.files!=[]){
+        console.log(req.query.id);
+        console.log(req.file,'req file');
+        if(req.file){
           console.log('entered');
         (async () => {
           const rembg = new Rembg({
@@ -109,14 +111,18 @@ module.exports={
           }
         })();
       }else{
-        let newcategory = categoryModel.findByIdAndUpdate(req.query.id,{
+        let newcategory = await categoryModel.findByIdAndUpdate(req.query.id,{
           name:req.body.category,
           basePrice:req.body.basePrice,
           isListed:1,
-          image:req.file.filename,
+          
           
           
       })
+      console.log('helo');
+      console.log(req.body.category);
+      console.log(req.body.basePrice);
+      console.log('end');
       console.log(newcategory);
       }
       res.redirect('/admin/categories')
