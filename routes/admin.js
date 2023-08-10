@@ -28,4 +28,16 @@ router.get('/usersList',adminController.usersList)
 
 router.get('/block-user',adminController.blockUser)
 router.get('/unblock-user',adminController.unblockUser)
+router.get('/getEditProduct',productController.getEditProduct)
+router.post('/getEditProduct',productUpload.array('images',4),productController.editProduct)
+router.get('/editCategory',categoryController.getEditCategory)
+router.post('/editCategory',categoryUpload.single('image'),(req,res)=>{
+    console.log(req.files,'myrrrrrr');
+})
+router.get('/list',categoryController.list)
+router.get('/unlist',categoryController.unlist)
+
+
+
+router.get('/deleteProduct',productController.deleteProduct)
 module.exports = router;

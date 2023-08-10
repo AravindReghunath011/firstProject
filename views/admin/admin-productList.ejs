@@ -32,7 +32,7 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -48,7 +48,7 @@
                     </div>
                 </li>
     
-                <li class="menu-item has-submenu active">
+                <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-products-list.html"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
@@ -56,7 +56,16 @@
                         <a href="/admin/products">Add Products </a>
                         <a href="/admin/productList">Product List</a>
                         
-                        
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Account</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/admin/usersList">Users List</a>
+                        <a href="page-account-register.html">User registration</a>
+                        <a href="page-error-404.html">Error 404</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -89,16 +98,7 @@
                         <a href="page-transactions-2.html">Transaction 2</a>
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
-                        <span class="text">Account</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div>
-                </li>
+               
                 <li class="menu-item">
                     <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
                         <span class="text">Reviews</span>
@@ -212,6 +212,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <%product.reverse()%>
                                         <%for(i=0;i<product.length;i++){%>
                                         <tr>
                                             <td>
@@ -226,8 +227,8 @@
                                             <td> <%=product[i].description%> </td>
                                             <td> <%=product[i].regularPrice%></td>
                                             <td > <%=product[i].unit%> </td>
-                                            <td ><a class=" btn-sm btn-info " href="">Edit </a></td>
-                                            <td class="text-end"><a class="btn btn-sm btn-danger" href="">Delete </a></td>
+                                            <td ><a class=" btn-sm btn-info " href="/admin/getEditProduct?id=<%=product[i]._id%>">Edit </a></td>
+                                            <td class="text-end"><a class="btn btn-sm btn-danger" href="/admin/deleteProduct?id=<%=product[i]._id%>">Delete </a></td>
                                         </tr>
                                         <%}%>
                                        

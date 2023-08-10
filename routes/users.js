@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/userController')
 const productController = require('../controllers/productController')
+const categoryController = require('../controllers/categroyController')
 
 /* GET home page. */
 router.get('/',userController.getHome);
@@ -28,6 +29,8 @@ router.get('/forgetpassOtp',userController.getForgetpassOtp)
 router.post('/forgetpassOtp',userController.checkOtp)
 router.get('/getChangepass',userController.getChangePass)
 router.post('/getChangepass',userController.changePass)
+router.get('/getCategoryList',categoryController.userCategroyList)
+router.get('/productDetails',productController.productDetails)
 
 
 

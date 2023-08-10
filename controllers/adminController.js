@@ -38,5 +38,6 @@ module.exports = {
         id = req.query.id
         await User.findByIdAndUpdate(id,{isVarified:1})
         res.redirect('/admin/usersList')
-    }
+    },
+    
 }

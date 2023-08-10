@@ -243,7 +243,7 @@
                                     <td><%=users[i].mobile%></td>
                                     <td class="text-end">
                                         <%if(users[i].isVarified==1){%>
-                                        <a href="/admin/block-user?id=<%=users[i]._id%>"  class="btn btn-sm btn-brand rounded font-sm mt-15">block</a>
+                                        <a href="/admin/block-user?id=<%=users[i]._id%>"  class="btn btn-sm btn-danger rounded font-sm mt-15">block</a>
                                         <%}else{%>
                                          <a href="/admin/unblock-user?id=<%=users[i]._id%>" class="btn btn-sm btn-brand rounded font-sm mt-15">unblock</a>
                                         <%}%>

@@ -1,7 +1,8 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs')
 const nodemailer =require('nodemailer')
-const config = require('../config/config')
+const config = require('../config/config');
+const categoryModel = require('../models/categoryModel');
 const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd79a471225b8ac858848f636c');
 
 module.exports ={
@@ -34,9 +35,11 @@ module.exports ={
         
 
     },
-    getHome:(req,res)=>{
+    getHome:async(req,res)=>{
+        let category = await categoryModel.find({}).lean()
+        console.log(category[0].name);
         
-        res.render('users/index',{isLoggedIn:req.session.isLoggedIn});
+        res.render('users/index',{isLoggedIn:req.session.isLoggedIn,category});
     },
     logout:(req,res)=>{
         req.session.isLoggedIn=false 

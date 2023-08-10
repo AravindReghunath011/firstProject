@@ -10,8 +10,8 @@ let categoryModel = new mongoose.Schema({
         type:Number,
         required:true,
     },
-    description:{
-        type:String,
+    isListed:{
+        type:Number,
         required:true
     },
     image:{
