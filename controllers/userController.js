@@ -12,16 +12,26 @@ module.exports ={
     },
     userLogin:async(req,res)=>{       
         let user = await User.findOne({email:req.body.email}).lean()
+        console.log(user);
         if(user){
+            console.log(user.password);
             bcrypt.compare(req.body.password,user.password).then((status)=>{
+                if(status){
+
+                
                 if(user.isVarified==1){
-                    req.session.isLoggedIn = user.name
+                    
+                    req.session.isLoggedIn = user
                     res.redirect('/')
                 }else{
                     req.session.loginPassErr = true
                     res.redirect('/login')
 
                 }
+            }else{
+                req.session.loginPassErr=true
+                res.redirect('/login')
+            }
 
             }).catch((err)=>{
 
@@ -106,7 +116,7 @@ module.exports ={
 
                 await use.save().then((data)=>{
                     console.log(use.name);
-                    req.session.isLoggedIn = use.name
+                    req.session.isLoggedIn = use
                     res.redirect('/')
                     
                 }).catch((err)=>{
@@ -175,7 +185,7 @@ module.exports ={
     },
     validOtp:(req,res)=>{
         if(req.body.otp.join('')==req.session.loginotp){
-            req.session.isLoggedIn = 'hi,User'
+            req.session.isLoggedIn = 'helo'
             res.redirect('/')
         }else{
             req.session.otpErr = true

@@ -46,8 +46,14 @@ module.exports={
         let product = await productModel.find({}).lean()
         res.render('admin/admin-productList',{product})
     },
-    productDetails:(req,res)=>{
-        res.render('users/productDetail')
+    productDetails:async(req,res)=>{
+        try {
+            let product = await productModel.findById(req.query.id)
+        res.render('users/productDetail',{product})
+            
+        } catch (error) {
+            console.log(error.message);
+        }
     },
     deleteProduct:async(req,res)=>{
         await productModel.deleteOne({_id:req.query.id})

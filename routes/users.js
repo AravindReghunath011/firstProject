@@ -3,6 +3,8 @@ var router = express.Router();
 const userController = require('../controllers/userController')
 const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categroyController')
+const cartController = require('../controllers/cartController')
+
 
 /* GET home page. */
 router.get('/',userController.getHome);
@@ -14,6 +16,7 @@ router.post('/login',userController.userLogin)
 router.get('/signup',userController.getSignup)
 router.post('/signup',userController.userSignup)
 router.post('/otp',userController.getOtp)
+
 
 
 
@@ -31,6 +34,9 @@ router.get('/getChangepass',userController.getChangePass)
 router.post('/getChangepass',userController.changePass)
 router.get('/getCategoryList',categoryController.userCategroyList)
 router.get('/productDetails',productController.productDetails)
+router.get('/cart',cartController.getCartPage)
+router.post('/cart',cartController.addToCart)
+
 
 
 

@@ -22,6 +22,9 @@ let userModel = new mongoose.Schema({
         type:Number,
         required:true
     },
+    cart:{
+        type:Array
+    },
     isVarified:{
         type:Number,
         default:0
