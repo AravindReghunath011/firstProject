@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const nodemailer =require('nodemailer')
 const config = require('../config/config');
 const categoryModel = require('../models/categoryModel');
+const { log } = require('debug/src/browser');
 const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd79a471225b8ac858848f636c');
 
 module.exports ={
@@ -243,8 +244,112 @@ module.exports ={
         
 
 
-    }
+    },
+    getProfilePage:async(req,res)=>{
+        try {
+            console.log(req.session.isLoggedIn);
+            let user = await User.findById(req.session.isLoggedIn._id)
+            console.log(user.address[0]);
+            res.render('users/userProfile',{user,isLoggedIn :req.session.isLoggedIn})
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    getAddressPage:(req,res)=>{
+        try {
+            res.render('users/addressPage',{isLoggedIn :req.session.isLoggedIn})
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    address:async(req,res)=>{
+        try{
+            console.log(req.body);
+            let id = Date.now().toString()
+            let newAddress = await User.updateOne({_id:req.session.isLoggedIn._id},{$push:{address:{
+                _id:id,
+                name:req.body.name,
+                number:req.body.number,
+                altNumber:req.body.altNumber,
+                country:req.body.country,
+                state:req.body.state,
+                house:req.body.street,
+                town:req.body.town,
+                pincode:req.body.pinCode,
+                landmark:req.body.landmark,
+                house:req.body.house
+            }}})
 
+            if(newAddress){
+                console.log(newAddress);
+                res.redirect('/profile')
+            }else{
+                req.session.addAddressErr = true
+                res.redirect('/address',{Err: req.session.addAddressErr})
+            }
+
+        }catch(err){
+            console.log(err.message)
+        }
+    },
+    getEditAddress:async(req,res)=>{
+        try {
+            console.log(req.query.id);
+            let userAddress = await User.aggregate([
+                {
+                $unwind:'$address'
+                },
+                {$match:{'address._id':req.query.id}}
+            ])
+            console.log(userAddress[0].address, 'addresssss');
+            res.render('users/editAddress',{userAddress,isLoggedIn :req.session.isLoggedIn})
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    editAddress:async(req,res)=>{
+        try {
+           let editedAddress = await User.updateOne({_id:req.session.isLoggedIn._id,'address._id':req.query.id},{$set:{
+            'address.$.name':req.body.name,
+            'address.$.number':req.body.number,
+            'address.$.altNumber':req.body.altNumber,
+            'address.$.country':req.body.country,
+            'address.$.state':req.body.state,
+            'address.$.house':req.body.house,
+            'address.$.town':req.body.town,
+            'address.$.pincode':req.body.pincode,
+            'address.$.landmark':req.body.landmark,
+
+           }
+                
+            })
+
+            console.log(editedAddress,'editedAddresss');
+            res.redirect('/profile')
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    deleteAddress:async(req,res)=>{
+        try {
+            console.log('===========================================');
+            console.log(req.body.id,'quereyyyyyyyy');
+        let dltAd = await User.updateOne({_id:req.session.isLoggedIn._id},{ $pull: { address: { _id: req.body.id } } })
+        if(dltAd){
+            res.json({status:true})
+        }else{
+            res.json({status:false})
+        }
+        
+        
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+ 
 
 
    

@@ -18,6 +18,7 @@
             color: #dc4c64 !important;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 </head>
 <%- include('../partials/user-header')%>
 
@@ -31,48 +32,69 @@
                 <div class="card border shadow-0">
                     <div class="m-4">
                         <h4 class="card-title mb-4">Your shopping cart</h4>
-                       
 
-                        <div class="row gy-3 mb-4">
-                            <div class="col-lg-5">
-                                <div class="me-lg-5">
-                                    <div class="d-flex">
-                                        <img src="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/12.webp"
-                                            class="border rounded me-3" style="width: 96px; height: 96px;" />
+                        <%if(cart){%>
+                            <%if(cart.length){%>
+                        <%cart.reverse%>
+                       
+                        <% for (i=0;i<cart.length;i++){%>
+                            
+                                <div class="row gy-3 mb-4">
+                                    <div class="col-lg-5">
+                                        <div class="me-lg-5">
+                                            <div class="d-flex">
+                                                <img src="/upload/product/<%=cart[i].ProductDetails[0].images[0]%>"
+                                                    class="border rounded me-3" style="width: 96px; height: 96px;" />
+                                                <div class="">
+                                                    <a href="#" class="nav-link"><%=cart[i].ProductDetails[0].name%></a>
+                                                    <p class="text-muted">Yellow, Jeans</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-md-4 col-6 mb-3">
+                                            <label class="mb-2 d-block">Quantity</label>
+                                            <div class="input-group mb-3" style="width: 170px;">
+                                            <button class="btn btn-white border border-secondary px-3" type="button" id="decrementButton" data-mdb-ripple-color="dark" onclick="changeQuantity('<%=cart[i]._id%>' , '<%=cart[i].proId%>' ,-1)">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <input name="quantity" type="text" id="<%=cart[i].ProductDetails[0]._id%>" class="form-control text-center border border-secondary" value="<%=cart[i].quantity%>" aria-label="Example text with button addon" aria-describedby="decrementButton" />
+                                            <button class="btn btn-white border border-secondary px-3" type="button" id="incrementButton" data-mdb-ripple-color="dark" onclick="changeQuantity('<%=cart[i]._id%>' , '<%=cart[i].proId%>' ,1)">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                            </div>
+                                            <div class="mt-4">
+                                                <p>Size:</p>
+                                            </div>
+                                        </div>
+        
+        
+        
+                                    <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
                                         <div class="">
-                                            <a href="#" class="nav-link">Mens T-shirt Cotton Base</a>
-                                            <p class="text-muted">Blue, Medium</p>
+                                            <text class="h6">$1156.00</text> <br />
+                                            <small class="text-muted text-nowrap"> <%=cart[i].ProductDetails[0].sale_price%> / per item </small>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                                        <div class="float-md-end">
+                                            <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i
+                                                    class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
+                                            <a href="#" class="btn btn-light border text-danger icon-hover-danger" onclick="removeProduct('<%=cart[i].ProductId%>')"> Remove</a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
-                                <div class="col-md-4 col-6 mb-3 " style="margin-right: 4rem;">
-                                    
-                                    <div class="input-group mb-3 ms-4" style="width: 170px;">
-                                    <button class="btn btn-white border border-secondary px-3" type="button" id="decrementButton" data-mdb-ripple-color="dark">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input name="quantity" type="text" id="quantityInput" class="form-control text-center border border-secondary" value="1" aria-label="Example text with button addon" aria-describedby="decrementButton" />
-                                    <button class="btn btn-white border border-secondary px-3" type="button" id="incrementButton" data-mdb-ripple-color="dark">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                    </div>
-                                </div><br>
-                                <div class=" mt-5"><br>
-                                    <text class="h6">$44.80</text> <br />
-                                    <small class="text-muted text-nowrap"> $12.20 / per item </small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-                                <div class="float-md-end">
-                                    <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i
-                                            class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                                    <a href="#" class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
-                                </div>
-                            </div>
-                        </div>
+                                
+                        
+                        <%}%>
+                        <%}else{%>
+                        <img src="/empty-cart.jpg" alt="">
+                            
+                            <%}%>
+                            <%}%>
+                           
+
 
                        
                     </div>
@@ -128,34 +150,55 @@
     </div>
 </section>
 
-<script>
-    function changeImage(newImageSrc) {
-      const selectedImage = document.getElementById('selectedImage');
-      const selectedImageLink = document.getElementById('selectedImageLink');
-      
-      selectedImage.setAttribute('src', "/upload/product/" + newImageSrc);
-      selectedImageLink.setAttribute('href', "/upload/product/" + newImageSrc);
-    }
 
-    const decrementButton = document.getElementById("decrementButton");
-    const incrementButton = document.getElementById("incrementButton");
-    const quantityInput = document.getElementById("quantityInput");
+  <script>
+    
+        function changeQuantity(userId,proId,count){
+            let quantity = document.getElementById(proId).value
+            $.ajax({
+                url:"/change-quantity",
+                method:'post',
+                data:{
+                    userId:userId,
+                    proId:proId,
+                    count:count,
+                    quantity:quantity,
+                },
+                success:(response)=>{
+                    console.log(response.status)
+                    if(response.status == true){
+                        location.reload();
+                    }else{
+                        let total = parseInt(quantity)+parseInt(count);
+                        document.getElementById(proId).value = total;
+                    }
+                }
+            })
+        }
 
-    decrementButton.addEventListener("click", () => {
-      let currentQuantity = parseInt(quantityInput.value);
-      if (!isNaN(currentQuantity)) {
-        currentQuantity = Math.max(currentQuantity - 1, 0);
-        quantityInput.value = currentQuantity;
-      }
-    });
 
-    incrementButton.addEventListener("click", () => {
-      let currentQuantity = parseInt(quantityInput.value);
-      if (!isNaN(currentQuantity)) {
-        currentQuantity++;
-        quantityInput.value = currentQuantity;
-      }
-    });
+        function removeProduct(proId){
+           
+            $.ajax({
+                url:'/removeProductFromCart',
+                method:'post',
+                data:{
+                    proId:proId
+                },
+                success:(response)=>{
+                    console.log(response),'helooo';
+                    location.reload()
+                    console.log('heloooo');
+                    return confirm(' You sure to remove?')
+                        
+                       
+                    
+                }
+            })
+        }
+   
+
+    
   </script>
 <!-- cart + summary -->
 

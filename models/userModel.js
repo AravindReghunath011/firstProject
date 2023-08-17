@@ -29,6 +29,10 @@ let userModel = new mongoose.Schema({
         type:Number,
         default:0
     },
+    address:{
+        type:Array,
+        default:[]
+    }
     
 });
 

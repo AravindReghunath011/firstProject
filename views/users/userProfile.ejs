@@ -1,0 +1,161 @@
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+</head>
+<%- include('../partials/user-header')%>
+
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+     
+  
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3"><%=user.name%></h5>
+              <p class="text-muted mb-1"><%=user.email%></p>
+              <div class="d-flex justify-content-center mt-4 mb-2">
+                <button type="button" class="btn btn-primary">Edit</button>
+                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%=user.name%></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%=user.email%></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%=user.mobile%></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <%if(user.address.length<2){%>
+          <a href="/address" class="btn btn-outline-primary justify-content-end">Add address</a>
+          <%}%>
+            
+          </div>
+          <div class="row ">
+            
+            <%for(i=0;i<user.address.length;i++){%>
+            <div class="col-md-6">
+              <div class="card mb-4 mb-md-0">
+                <div class="card-body">
+                  <div class="d-flex">
+                    <p class="mb-4 ms-2"> Address</p>
+                  
+                  <div class="ms-auto">
+                    <a href="/editAddress?id=<%=user.address[i]._id%>">edit</a>
+                    <a href="#" onclick="deleteAddress('<%=user.address[i]._id%>')">delete</a>
+                  </div>
+
+                  </div>
+                  
+                  
+                    <table class='table'>
+                      <tr>
+                        <th> name</th>
+                        <td ><%=user.address[i].name%></td>
+                        
+                      </tr>
+                      <tr>
+                        <th>mobile</th>
+                        <td><%=user.address[i].number%></td>
+                      </tr>
+                      <tr>
+                        <th>Alt mobile</th>
+                        <td><%=user.address[i].altNumber%></td>
+                      </tr>
+                      <tr>
+                        <th>country</th>
+                        <td><%=user.address[i].country%></td>
+                      </tr>
+                      <tr>
+                        <th>pincode</th>
+                        <td><%=user.address[i].pincode%></td>
+                      </tr>
+                      <tr>
+                        <th>state</th>
+                        <td><%=user.address[i].state%></td>
+                      </tr>
+                      <tr>
+                        <th>house</th>
+                        <td><%=user.address[i].house%></td>
+                      </tr>
+                      <tr>
+                        <th>town</th>
+                        <td><%=user.address[i].town%></td>
+                      </tr>
+                      <tr>
+                        <th>landmark</th>
+                        <td><%=user.address[i].landmark%></td>
+                      </tr>
+                      
+                    </table>
+                </div>
+              </div>
+            </div>
+            <%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function deleteAddress(prodId){
+      alert(prodId)
+      $.ajax({
+        url:'/deleteAddress',
+        method:'post',
+        data:{
+          id:prodId
+        },
+         success:(response)=>{
+                    console.log(response),'helooo';
+                    location.reload()
+                    console.log('heloooo');
+                    return confirm(' You sure to remove?')
+                        
+                       
+                    
+              }
+      })
+    }
+  </script>

@@ -49,7 +49,7 @@ module.exports={
     productDetails:async(req,res)=>{
         try {
             let product = await productModel.findById(req.query.id)
-        res.render('users/productDetail',{product})
+        res.render('users/productDetail',{product,isLoggedIn : req.session.isLoggedIn})
             
         } catch (error) {
             console.log(error.message);

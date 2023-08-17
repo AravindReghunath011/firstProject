@@ -36,6 +36,14 @@ router.get('/getCategoryList',categoryController.userCategroyList)
 router.get('/productDetails',productController.productDetails)
 router.get('/cart',cartController.getCartPage)
 router.post('/cart',cartController.addToCart)
+router.get('/profile',userController.getProfilePage)
+router.post('/change-quantity',cartController.quantityChange)
+router.post('/removeProductFromCart',cartController.removeProduct)
+router.get('/address',userController.getAddressPage)
+router.post('/address',userController.address)
+router.get('/editAddress',userController.getEditAddress)
+router.post('/editAddress',userController.editAddress)
+router.post('/deleteAddress',userController.deleteAddress)
 
 
 

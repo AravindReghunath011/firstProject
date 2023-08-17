@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="/css/style.css">
     
 </head>
-<header class="main_menu home_menu position-relative">
+<header  class="main_menu home_menu position-relative mb-2">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-12">
@@ -54,15 +54,17 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown_2">
                                     
-                                   
+                                    <%if(isLoggedIn){%>
                                         
-                                   
+                                    <a class="dropdown-item" href="/">hi,<%=isLoggedIn.name%> </a>
+                                    <a class="dropdown-item" href="/profile">Profile </a>
+                                    
                                     <a class="dropdown-item" href="/logout">logout </a>
 
-                                 
+                                    <%}else{%>
                                     <a class="dropdown-item" href="/login"> login</a>
-                            
-                                    <a class="dropdown-item" href="/signup">Signup</a>
+                                    <%}%>
+                                    
                                    
                                 </div>
                             </li>
@@ -83,11 +85,11 @@
                         </ul>
                     </div>
                     <div class="hearer_icon d-flex">
-                       
+                        <a id="search_1" href="javascript:void(0)"><i class="ti-search"></i></a>
                         <a href=""><i class="ti-heart"></i></a>
                         <div class="dropdown cart">
-                            <a class="dropdown-toggle" href="#" id="navbarDropdown3" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="dropdown-toggle" href="/cart"  role="button"
+                                aria-haspopup="true" >
                                 <i class="fas fa-cart-plus"></i>
                             </a>
                             
@@ -103,5 +105,39 @@
             </div>
         </div>
     </div>
-   
+    <div class="search_input" id="search_input_box">
+        <div class="container ">
+            <form class="d-flex justify-content-between search-inner">
+                <input type="text" class="form-control" id="search_input" placeholder="Search Here">
+                <button type="submit" class="btn"></button>
+                <span class="ti-close" id="close_search" title="Close Search"></span>
+            </form>
+        </div>
+    </div>
 </header>
+
+<script src="/js/jquery-1.12.1.min.js"></script>
+<!-- popper js -->
+<script src="/js/popper.min.js"></script>
+<!-- bootstrap js -->
+<script src="/js/bootstrap.min.js"></script>
+<!-- easing js -->
+<script src="/js/jquery.magnific-popup.js"></script>
+<!-- swiper js -->
+<script src="/js/swiper.min.js"></script>
+<!-- swiper js -->
+<script src="/js/masonry.pkgd.js"></script>
+<!-- particles js -->
+<script src="/js/owl.carousel.min.js"></script>
+<script src="js/jquery.nice-select.min.js"></script>
+<!-- slick js -->
+<script src="/js/slick.min.js"></script>
+<script src="/js/jquery.counterup.min.js"></script>
+<script src="/js/waypoints.min.js"></script>
+<script src="/js/contact.js"></script>
+<script src="/js/jquery.ajaxchimp.min.js"></script>
+<script src="/js/jquery.form.js"></script>
+<script src="/js/jquery.validate.min.js"></script>
+<script src="/js/mail-script.js"></script>
+<!-- custom js -->
+<script src="/js/custom.js"></script>
