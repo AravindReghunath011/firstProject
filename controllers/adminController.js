@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs')
+const orderModel = require('../models/orderModel')
 
 module.exports = {
     getadminLogin:(req,res)=>{
@@ -39,5 +40,15 @@ module.exports = {
         await User.findByIdAndUpdate(id,{isVarified:1})
         res.redirect('/admin/usersList')
     },
+    orderList:async(req,res)=>{
+        try {
+            
+            let orders = await orderModel.find()
+            console.log(orders);
+            res.render('admin/orderList',{orders})
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
     
 }

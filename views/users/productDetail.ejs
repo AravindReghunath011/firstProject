@@ -1,4 +1,7 @@
-
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 <%- include('../partials/user-header')%>
 <!-- content -->
 <section class="py-5">
@@ -26,7 +29,7 @@
          
 
           <div class="mt-5 mb-3">
-            <span class="h5">Rs.<%= product.regularPrice %></span>
+            <span id="price" class="h5">Rs.<%= product.promotionalPrice %></span>
             
           </div>
 
@@ -39,7 +42,7 @@
 
           <hr />
 
-          <form action="/cart?id=<%= product._id %>" method="post">
+         
 
           <div class="row mb-4">
             <div class="col-md-4 col-6">
@@ -65,16 +68,20 @@
             </div>
             </div>
           </div>
-          <a href="#" style="background-color: #ff3368; color: #ffff;" class="btn  shadow-0"> Buy now </a>
-          <button href="#" class="btn btn-primary shadow-0 " type="submit">  <i class="me-1 fa fa-shopping-basket" ></i> Add to cart </button>
+          <a onclick="buyNow()" style="background-color: #ff3368; color: #ffff;" class="btn  shadow-0"> Buy now </a>
+          <button href="#" class="btn btn-primary shadow-0 " onclick="addToCart('<%= product._id %>','<%= product.promotionalPrice %>')">  <i class="me-1 fa fa-shopping-basket" ></i> Add to cart </button>
           <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
         </div>
-      </form>
+      
       </main>
     </div>
   </div>
 </section>
 <!-- content -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 
 <script>
   function changeImage(newImageSrc) {
@@ -104,4 +111,43 @@
       quantityInput.value = currentQuantity;
     }
   });
+
+
+  function addToCart(proId,price){
+    
+    const quantity = document.getElementById("quantityInput").value;
+
+    $.ajax({
+                url:'/cart',
+                method:'post',
+                data:{
+                    proId:proId,
+                    quantity:quantity
+
+                },
+                success:(response)=>{
+                  console.log(response);
+                 
+                  console.log(response.status);
+                  if(response.status==true){
+                    Swal.fire({
+                            title: 'Item dded to cart ',
+                            text: 'Product has been added to cart succesfully.',
+                            icon: 'success',
+                            timer: 5000
+                        })
+                  }else{
+                    console.log('failed')
+                  }     
+                            
+                    
+                }
+            })
+  }
+
+  function buyNow(){
+    $.ajax({
+      url:'/buy?'+'<%= product._id %>'
+    })
+  }
 </script>

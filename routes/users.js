@@ -44,6 +44,10 @@ router.post('/address',userController.address)
 router.get('/editAddress',userController.getEditAddress)
 router.post('/editAddress',userController.editAddress)
 router.post('/deleteAddress',userController.deleteAddress)
+router.get('/buy',cartController.buyProduct)
+router.post('/makePurchase',cartController.makePurchase)
+
+
 
 
 

@@ -34,6 +34,7 @@ router.get('/editCategory',categoryController.getEditCategory)
 router.post('/editCategory',categoryUpload.single('image'),categoryController.editCategory)
 router.get('/list',categoryController.list)
 router.get('/unlist',categoryController.unlist)
+router.get('/orderList',adminController.orderList)
 
 
 

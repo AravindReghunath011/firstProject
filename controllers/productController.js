@@ -23,10 +23,9 @@ module.exports={
         })
 
         product.save().then((status)=>{
-            console.log(status);
             res.redirect('/admin/products')
         }).catch((err)=>{
-            console.log('adich poi gooys',err.message);
+            console.log(err.message);
             
             res.redirect('/admin/products')
         })
@@ -39,7 +38,6 @@ module.exports={
     },
     showProducts:async(req,res)=>{
         let products = await productModel.find({}).lean()
-        console.log('products',products);
         res.render('users/showProducts',{products})
     },
     adminProductList:async(req,res)=>{
@@ -116,10 +114,9 @@ module.exports={
         }
         console.log(req.query.id);
         
-        let id = req.query.id
-       
-       
         
 
-    }
+    },
+    
+    
 }

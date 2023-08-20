@@ -11,7 +11,7 @@ module.exports ={
         res.render('users/login',{err:req.session.loginPassErr,nouser:req.session.noUser})
 
     },
-    userLogin:async(req,res)=>{       
+    userLogin:async(req,res)=>{        
         let user = await User.findOne({email:req.body.email}).lean()
         console.log(user);
         if(user){
@@ -322,6 +322,7 @@ module.exports ={
             'address.$.landmark':req.body.landmark,
 
            }
+           
                 
             })
 
