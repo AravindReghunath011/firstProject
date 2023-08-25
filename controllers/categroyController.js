@@ -15,11 +15,26 @@ module.exports={
       let data = await category.find({})
       console.log(data);
       
-        res.render('admin/categories',{data:data})
+        res.render('admin/categories',{data:data,Err:req.session.categoryExist})
+        
     },
 
     
     addCategory:async(req,res)=>{
+
+      let categoryExist = await categoryModel.findOne({
+        name: { $regex: new RegExp(req.body.category, 'i') }
+    })
+    console.log(categoryExist,'kikiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiikkkkkkkk');
+
+    if(categoryExist){
+      req.session.categoryExist = true
+      res.redirect('/admin/categories')
+
+    }else{
+
+
+    
       
         console.log(req.file);
         (async () => {
@@ -58,18 +73,18 @@ module.exports={
 
          
 
-        
+    }
         
 
     },
     userCategroyList:async(req,res)=>{
-      let categories = await category.find({}).lean()
-      res.render('users/userCategoryList',{categories})
+      let categories = await category.find({isListed:1}).lean()
+      res.render('users/userCategoryList',{categories,isLoggedIn:req.session.isLoggedIn})
     },
     getEditCategory:async(req,res)=>{
       try{
         let category = await categoryModel.findById(req.query.id)
-        console.log(category);
+        
         res.render('admin/editCategory',{category})
       }catch(error){
         console.log(error.message);
@@ -78,6 +93,13 @@ module.exports={
     },
     editCategory:async(req,res)=>{
       try{
+        let categoryExist = await categoryModel.find({
+          category: { $regex: new RegExp(req.body.category, 'i') }
+      })
+      console.log(categoryExist,'kikikiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiki ');
+        if(categoryExist){
+          res.redirect('/admin/categories')
+        }else{
         console.log(req.query.id);
         console.log(req.file,'req file');
         if(req.file){
@@ -93,14 +115,15 @@ module.exports={
             let input = sharp(req.file.path); 
             let output = await rembg.remove(input);
             await output.webp().toFile('./public/upload/category/'+req.file.filename);
-            let newcategory = categoryModel.findByIdAndUpdate(req.query.id,{
+            let newcategory = await categoryModel.findByIdAndUpdate(req.query.id,{
               name:req.body.category,
-              basePrice:req.body.basePrice,
+              basePrice:req.body.basePrice, 
               isListed:1,
               image:req.file.filename,
               
               
-          })
+          },{new:true})
+          console.log(newcategory,'=====');
   
          
             
@@ -119,15 +142,11 @@ module.exports={
           
           
       })
-      console.log('helo');
-      console.log(req.body.category);
-      console.log(req.body.basePrice);
-      console.log('end');
-      console.log(newcategory);
+     
       }
       res.redirect('/admin/categories')
        
-      }catch(err){
+      }}catch(err){
         console.log(err.message);
       }
     },

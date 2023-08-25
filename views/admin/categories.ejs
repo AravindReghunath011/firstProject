@@ -155,22 +155,19 @@
                         <div class="col-md-3">
                             <form action="/admin/categories" method="post" enctype="multipart/form-data">
                                 <div class="mb-4">
-                                    <label for="product_name" class="form-label">Name</label>
-                                    <input type="text" name="category" placeholder="Type here" class="form-control" id="product_name" />
+                                    <label for="product_name" id="name" class="form-label name">Name</label>
+                                    <input type="text" name="category" id="name" placeholder="Type here" class="form-control" id="product_name" />
                                 </div>
-                                <div class="mb-4">
-                                    <label for="product_slug" class="form-label">Base Price</label>
-                                    <input type="text"  name="basePrice" placeholder="Type here" class="form-control" id="product_slug" />
-                                </div>
+                               
                                 <div class="mb-4">
                                     <label for="product_slug" class="form-label">Image</label>
                                     <input type="file"  name="image"  class="form-control" id="product_slug" />
                                 </div>
-                                
                                
+                               <p id="err-msg"></p>
                                
                                 <div class="d-grid">
-                                    <button class="btn btn-primary">Create category</button>
+                                    <button  onclick="validate('<%=Err%>')" class="btn btn-primary">create category</button>
                                 </div>
                             </form>
                         </div>
@@ -183,7 +180,7 @@
                                             <th >No</th>
                                             <th>Name</th>
                                             <th>Image</th>
-                                            <th>Base Price</th>
+                                            
                                            <th>status</th>
                                             <th>Order</th>
                                             <th class="text-end">action</th>
@@ -197,7 +194,7 @@
                                             <td><%=i+1%></td>
                                             <td><b><%=data[i].name%></b></td>
                                             <td><img style="width: 100px;" src="/upload/category/<%=data[i].image%>" alt=""></td>
-                                            <td><%=data[i].basePrice%></td>
+                                            
                                             <td>
                                                 <%if(data[i].isListed==1){%>
                                                     <span class="badge rounded-pill alert-success">Listed</span>
@@ -252,3 +249,31 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 </html>
+
+
+
+<script>
+    function validate(err){
+        
+        document.getElementsByClassName('name').style.borderColor = 'red'
+        
+        if(err){
+            document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br>category already exist'
+        }
+        document.getElementById('err-msg').innerHTML = ''
+        let name = document.getElementById('name').value;
+        const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+
+        if(nameRegex.test(name)){
+            document.getElementById('name').style.borderColor = 'red'
+        }else{  
+          document.getElementById('name').style.borderColor = 'red'
+          document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Name error'
+          //alert("Name Eroor 1:Start with capital letter 2:No white spaces 3:No Special symbols")
+          event.preventDefault()
+        }
+       
+
+        
+    }
+  </script>

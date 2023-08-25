@@ -4,6 +4,7 @@ const userController = require('../controllers/userController')
 const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categroyController')
 const cartController = require('../controllers/cartController')
+const orderController = require('../controllers/orderController')
 
 
 /* GET home page. */
@@ -34,7 +35,7 @@ router.get('/getChangepass',userController.getChangePass)
 router.post('/getChangepass',userController.changePass)
 router.get('/getCategoryList',categoryController.userCategroyList)
 router.get('/productDetails',productController.productDetails)
-router.get('/cart',cartController.getCartPage)
+router.get('/cart',cartController.getCartPage) 
 router.post('/cart',cartController.addToCart)
 router.get('/profile',userController.getProfilePage)
 router.post('/change-quantity',cartController.quantityChange)
@@ -46,6 +47,8 @@ router.post('/editAddress',userController.editAddress)
 router.post('/deleteAddress',userController.deleteAddress)
 router.get('/buy',cartController.buyProduct)
 router.post('/makePurchase',cartController.makePurchase)
+router.get('/orderDetails',orderController.userOrderDetails)
+router.get('/orderList',orderController.userOrderList)
 
 
 

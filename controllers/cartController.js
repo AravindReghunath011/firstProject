@@ -7,7 +7,7 @@ module.exports={
     getCartPage:async(req,res)=>{
         try{
             let user = req.session.isLoggedIn
-            let GrandTotal = 0
+            
        
             let oid = new mongodb.ObjectId(user._id)
             console.log('helo');
@@ -19,13 +19,20 @@ module.exports={
                     quantity:'$cart.quantity'
                 }},
                 {$lookup:{
-                    from:'products',
+                    from:'products', 
                     localField:'proId', 
                     foreignField:'_id',
                     as:'ProductDetails',
                 }}
             ])
             console.log(cartProducts);
+
+            let GrandTotal = 0
+            for(let i=0;i<cartProducts.length;i++){
+                let qua = parseInt(cartProducts[i].quantity);
+                GrandTotal = GrandTotal+(qua*parseInt(cartProducts[i].ProductDetails[0].promotionalPrice))
+            }
+            console.log(GrandTotal,'=======.....................');
            
              
             
@@ -83,7 +90,7 @@ module.exports={
                     }
                 })
 
-            }
+            }   
             
         } catch (error) {
             console.log(error.message);
@@ -184,7 +191,7 @@ module.exports={
         newOrder.save().then((status)=>{
             console.log('=====================================================');
             console.log(status);
-            res.json({status:true})
+            res.json({status:true,id:newOrder._id})
         }).catch((err)=>{
             console.log(err.message);
         })

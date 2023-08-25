@@ -38,7 +38,7 @@ module.exports={
     },
     showProducts:async(req,res)=>{
         let products = await productModel.find({}).lean()
-        res.render('users/showProducts',{products})
+        res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn})
     },
     adminProductList:async(req,res)=>{
         let product = await productModel.find({}).lean()

@@ -6,10 +6,6 @@ let categoryModel = new mongoose.Schema({
         type:String,
         required:true,
     },
-    basePrice:{
-        type:Number,
-        required:true,
-    },
     isListed:{
         type:Number,
         required:true

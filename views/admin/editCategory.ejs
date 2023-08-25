@@ -208,25 +208,14 @@
                             
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Category title</label>
-                                    <input type="text" value="<%=category.name%>" name="category" required="true" placeholder="Type here" class="form-control" id="product_name">
+                                    <input type="text" value="<%=category.name%>" name="category" id="name" required="true" placeholder="Type here" class="form-control" id="product_name">
                                 </div>
                                
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="mb-4">
-                                            <label class="form-label">Base price</label>
-                                            <div class="row gx-2">
-                                                <input placeholder="$" value="<%=category.basePrice%>" required="true" name="basePrice" type="text" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    
-                                </div>
+                               <p id="err-msg"></p>
                                 
                                 <div class="d-flex justify-content-end">
                             
-                                    <button type="submit" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
+                                    <button type="submit" onclick="validate()" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
                                 </div>
                                 
                             
@@ -282,3 +271,23 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
+
+
+<script>
+    function validate(){
+        document.getElementById('err-msg').innerHTML = ''
+        let name = document.getElementById('name').value;
+        const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+
+        if(nameRegex.test(name)){
+        }else{  
+          document.getElementById('name').style.borderColor = 'red'
+          document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Name error'
+          //alert("Name Eroor 1:Start with capital letter 2:No white spaces 3:No Special symbols")
+          event.preventDefault()
+        }
+       
+
+        
+    }
+  </script>

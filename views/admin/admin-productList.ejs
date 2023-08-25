@@ -203,18 +203,21 @@
                                     <thead>
                                         
                                         <tr>
-                                            <th width="15%">Product</th>
-                                            <th width="15%">category</th>
-                                            <th width="35%">description</th>
-                                            <th width="15%">Regular Price</th>
-                                            <th width="15%">Unit</th>
-                                            <th width="15%" class="text-end">Access</th>
+                                            <th>#</th>
+                                            <th >Product</th>
+                                            <th >category</th>
+                                            <th >description</th>
+                                            <th >Regular Price</th>
+                                            <th >Promotional Price</th>
+                                            <th >Unit</th>
+                                            <th  class="text-end">Access</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <%product.reverse()%>
                                         <%for(i=0;i<product.length;i++){%>
                                         <tr>
+                                            <td><%=i+1%></td>
                                             <td>
                                                 <a class="itemside" href="#">
                                                     <div class="left">
@@ -226,9 +229,10 @@
                                             <td>  <%=product[i].category%> </td>
                                             <td> <%=product[i].description%> </td>
                                             <td> <%=product[i].regularPrice%></td>
+                                            <td> <%=product[i].promotionalPrice%></td>
                                             <td > <%=product[i].unit%> </td>
-                                            <td ><a class=" btn-sm btn-info " href="/admin/getEditProduct?id=<%=product[i]._id%>">Edit </a></td>
-                                            <td class="text-end"><a class="btn btn-sm btn-danger" href="/admin/deleteProduct?id=<%=product[i]._id%>">Delete </a></td>
+                                            <td ><a class=" btn-sm btn-info " href="/admin/getEditProduct?id=<%=product[i]._id%>">Edit </a>
+                                            <a class="btn btn-sm btn-danger" href="/admin/deleteProduct?id=<%=product[i]._id%>">Delete </a></td>
                                         </tr>
                                         <%}%>
                                        

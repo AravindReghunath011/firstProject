@@ -208,41 +208,39 @@
                             
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input type="text" name="name" required="true" placeholder="Type here" class="form-control" id="product_name">
+                                    <input type="text" name="name" required="true" placeholder="Type here" class="form-control" id="name">
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" required="true" name="description" class="form-control" rows="4"></textarea>
+                                    <textarea placeholder="Type here" required="true" name="description" id="description" class="form-control" rows="4"></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Regular price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="$" required="true" name="Rprice" type="text" class="form-control">
+                                                <input placeholder="$" required="true" name="Rprice" id="Rprice" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Promotional price</label>
-                                            <input placeholder="$" required="true" name="Pprice" type="text" class="form-control">
+                                            <input placeholder="$" required="true" id="Pprice" name="Pprice" type="text" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Unit</label>
-                                            <input placeholder="0" required="true" name="unit" type="text" class="form-control">
+                                            <input placeholder="0" required="true" id="unit" name="unit" type="text" class="form-control">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label">gst</label>
-                                    <input type="text" required="true" name="gst" placeholder="%" class="form-control" id="product_name">
-                                </div>
+                                <p id="err-msg"></p>
+                               
                                 <div class="d-flex justify-content-end">
                             
-                                    <button type="submit" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
+                                    <button onclick="validate()" type="submit" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
                                 </div>
                                 
                             
@@ -260,7 +258,7 @@
                             <div class="input-upload">
                                 <p>upload 4 images</p>
                                 <img src="/assets/imgs/theme/upload.svg" alt="">
-                                <input name="images" multiple required="true" class="form-control" type="file">
+                                <input name="images" multiple required="true" id="image" class="form-control" type="file">
                             </div>
                         </div>
                         
@@ -273,7 +271,7 @@
                             <div class="row gx-2">
                                 <div class=" mb-3">
                                     <label class="form-label">Category</label>
-                                    <select name="category" class="form-select">
+                                    <select name="category"  class="form-select">
                                         <% for(i=0;i<category.length;i++){%>
                                         <option> <%=category[i].name%> </option>
                                         <%}%>
@@ -314,3 +312,80 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>
+
+<script>
+
+    function validate(){
+        document.getElementById('err-msg').innerHTML = ''
+        let name = document.getElementById('name').value;
+        const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+
+        if(nameRegex.test(name)){
+            document.getElementById('name').style.borderColor = 'white'
+        }else{  
+          document.getElementById('name').style.borderColor = 'red'
+          document.getElementById('name').style.borderWidth = '1px'
+          document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Name error'
+          //alert("Name Eroor 1:Start with capital letter 2:No white spaces 3:No Special symbols")
+          event.preventDefault()
+        }
+        
+        const RpriceRegex =/^[1-9][0-9]*$/
+
+
+        let Rprice = document.getElementById('Rprice').value;
+        if(RpriceRegex.test(Rprice)){
+            document.getElementById('Rprice').style.borderColor = 'white'
+        }else{
+          document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Regular Price error'
+          document.getElementById('Rprice').style.borderColor = 'red'
+          document.getElementById('Rprice').style.borderWidth = '1px'
+          //alert('Password Error 1:Minimum 8 charecters 2:use charecters and number 3:no white spaces')
+          event.preventDefault()
+        }
+
+        const PpriceRegex = /^[1-9][0-9]*$/
+
+
+        let Pprice = document.getElementById('Pprice').value;
+        if(RpriceRegex.test(Pprice)){
+            document.getElementById('Pprice').style.borderColor = 'white'
+        }else{
+        document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Promotional Price error'
+        document.getElementById('Pprice').style.borderColor = 'red'
+        document.getElementById('Pprice').style.borderWidth = '1px'
+        //alert('Password Error 1:Minimum 8 charecters 2:use charecters and number 3:no white spaces')
+        event.preventDefault()
+        }
+
+        const unitRegex = /^\d+$/;
+
+        let unit = document.getElementById('unit').value;
+        if(unitRegex.test(unit)){
+            document.getElementById('unit').style.borderColor = 'white'
+        }else{
+        document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> unit  error'
+        document.getElementById('unit').style.borderColor = 'red'
+        document.getElementById('unit').style.borderWidth = '1px'
+        //alert('Password Error 1:Minimum 8 charecters 2:use charecters and number 3:no white spaces')
+        event.preventDefault()
+        }
+
+        const descRegex = /^(?!\s*$).+/; 
+
+
+        let description = document.getElementById('description').value;
+        if(descRegex.test(description)){
+
+            document.getElementById('description').style.borderColor = 'white'
+        }else{
+        document.getElementById('err-msg').innerHTML = document.getElementById('err-msg').innerHTML + '<br> Description  error'
+        document.getElementById('description').style.borderColor = 'red'
+        document.getElementById('description').style.borderWidth = '1px'
+        //alert('Password Error 1:Minimum 8 charecters 2:use charecters and number 3:no white spaces')
+        event.preventDefault()
+        }
+  
+        
+    }
+  </script>

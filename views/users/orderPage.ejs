@@ -35,179 +35,179 @@
             border: solid 2px rgb(15, 103, 218);
             background-color: #bad5ff;
         }
+
         :root {
-  --card-line-height: 1.2em;
-  --card-padding: 1em;
-  --card-radius: 0.5em;
-  --color-green: #558309;
-  --color-gray: #e2ebf6;
-  --color-dark-gray: #c4d1e1;
-  --radio-border-width: 2px;
-  --radio-size: 1.5em;
-}
+            --card-line-height: 1.2em;
+            --card-padding: 1em;
+            --card-radius: 0.5em;
+            --color-green: #558309;
+            --color-gray: #e2ebf6;
+            --color-dark-gray: #c4d1e1;
+            --radio-border-width: 2px;
+            --radio-size: 1.5em;
+        }
 
-body {
-  background-color: #f2f8ff;
-  color: #263238;
-  font-family: 'Noto Sans', sans-serif;
-  margin: 0;
-  padding: 2em 6vw;
-}
+        body {
+            background-color: #f2f8ff;
+            color: #263238;
+            font-family: 'Noto Sans', sans-serif;
+            margin: 0;
+            padding: 2em 6vw;
+        }
 
-.grid {
-  display: grid;
-  grid-gap: var(--card-padding);
-  margin: 0 auto;
-  max-width: 60em;
-  padding: 0;
- 
-  @media (min-width: 42em) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+        .grid {
+            display: grid;
+            grid-gap: var(--card-padding);
+            margin: 0 auto;
+            max-width: 60em;
+            padding: 0;
 
-.card {
-  background-color: #fff;
-  border-radius: var(--card-radius);
-  position: relative;
-  
-  &:hover {
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
-  }
-}
+            @media (min-width: 42em) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
-.radio {
-  font-size: inherit;
-  margin: 0;
-  position: absolute;
-  right: calc(var(--card-padding) + var(--radio-border-width));
-  top: calc(var(--card-padding) + var(--radio-border-width));
-}
+        .card {
+            background-color: #fff;
+            border-radius: var(--card-radius);
+            position: relative;
 
-@supports(-webkit-appearance: none) or (-moz-appearance: none) { 
-  .radio {
-    background: #fff;
-    border: var(--radio-border-width) solid var(--color-gray);
-    border-radius: 50%;
-    cursor: pointer;
-    height: var(--radio-size);
-    outline: none;
-    transition: 
-      background 0.2s ease-out,
-      border-color 0.2s ease-out;
-    width: var(--radio-size); 
+            &:hover {
+                box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+            }
+        }
 
-    &::after {
-      border: var(--radio-border-width) solid #fff;
-      border-top: 0;
-      border-left: 0;
-      content: '';
-      display: block;
-      height: 0.75rem;
-      left: 25%;
-      position: absolute;
-      top: 50%;
-      transform: 
-        rotate(45deg)
-        translate(-50%, -50%);
-      width: 0.375rem;
-    }
+        .radio {
+            font-size: inherit;
+            margin: 0;
+            position: absolute;
+            right: calc(var(--card-padding) + var(--radio-border-width));
+            top: calc(var(--card-padding) + var(--radio-border-width));
+        }
 
-    &:checked {
-      background: var(--color-green);
-      border-color: var(--color-green);
-    }
-  }
-  
-  .card:hover .radio {
-    border-color: var(--color-dark-gray);
-    
-    &:checked {
-      border-color: var(--color-green);
-    }
-  }
-}
+        @supports(-webkit-appearance: none) or (-moz-appearance: none) {
+            .radio {
+                background: #fff;
+                border: var(--radio-border-width) solid var(--color-gray);
+                border-radius: 50%;
+                cursor: pointer;
+                height: var(--radio-size);
+                outline: none;
+                transition:
+                    background 0.2s ease-out,
+                    border-color 0.2s ease-out;
+                width: var(--radio-size);
 
-.plan-details {
-  border: var(--radio-border-width) solid var(--color-gray);
-  border-radius: var(--card-radius);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  padding: var(--card-padding);
-  transition: border-color 0.2s ease-out;
-}
+                &::after {
+                    border: var(--radio-border-width) solid #fff;
+                    border-top: 0;
+                    border-left: 0;
+                    content: '';
+                    display: block;
+                    height: 0.75rem;
+                    left: 25%;
+                    position: absolute;
+                    top: 50%;
+                    transform:
+                        rotate(45deg) translate(-50%, -50%);
+                    width: 0.375rem;
+                }
 
-.card:hover .plan-details {
-  border-color: var(--color-dark-gray);
-}
+                &:checked {
+                    background: var(--color-green);
+                    border-color: var(--color-green);
+                }
+            }
 
-.radio:checked ~ .plan-details {
-  border-color: var(--color-green);
-}
+            .card:hover .radio {
+                border-color: var(--color-dark-gray);
 
-.radio:focus ~ .plan-details {
-  box-shadow: 0 0 0 2px var(--color-dark-gray);
-}
+                &:checked {
+                    border-color: var(--color-green);
+                }
+            }
+        }
 
-.radio:disabled ~ .plan-details {
-  color: var(--color-dark-gray);
-  cursor: default;
-}
+        .plan-details {
+            border: var(--radio-border-width) solid var(--color-gray);
+            border-radius: var(--card-radius);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            padding: var(--card-padding);
+            transition: border-color 0.2s ease-out;
+        }
 
-.radio:disabled ~ .plan-details .plan-type {
-  color: var(--color-dark-gray);
-}
+        .card:hover .plan-details {
+            border-color: var(--color-dark-gray);
+        }
 
-.card:hover .radio:disabled ~ .plan-details {
-  border-color: var(--color-gray);
-  box-shadow: none;
-}
+        .radio:checked~.plan-details {
+            border-color: var(--color-green);
+        }
 
-.card:hover .radio:disabled {
-    border-color: var(--color-gray);
-  }
+        .radio:focus~.plan-details {
+            box-shadow: 0 0 0 2px var(--color-dark-gray);
+        }
 
-.plan-type {
-  color: var(--color-green);
-  font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 1em;
-}
+        .radio:disabled~.plan-details {
+            color: var(--color-dark-gray);
+            cursor: default;
+        }
 
-.plan-cost {
-  font-size: 2.5rem;
-  font-weight: bold;
-  padding: 0.5rem 0;
-}
+        .radio:disabled~.plan-details .plan-type {
+            color: var(--color-dark-gray);
+        }
 
-.slash {
-  font-weight: normal;
-}
+        .card:hover .radio:disabled~.plan-details {
+            border-color: var(--color-gray);
+            box-shadow: none;
+        }
 
-.plan-cycle {
-  font-size: 2rem;
-  font-variant: none;
-  border-bottom: none;
-  cursor: inherit;
-  text-decoration: none;
-}
+        .card:hover .radio:disabled {
+            border-color: var(--color-gray);
+        }
 
-.hidden-visually {
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
+        .plan-type {
+            color: var(--color-green);
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1em;
+        }
+
+        .plan-cost {
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 0.5rem 0;
+        }
+
+        .slash {
+            font-weight: normal;
+        }
+
+        .plan-cycle {
+            font-size: 2rem;
+            font-variant: none;
+            border-bottom: none;
+            cursor: inherit;
+            text-decoration: none;
+        }
+
+        .hidden-visually {
+            border: 0;
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            padding: 0;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 </head>
 <!-- cart + summary -->
 <section class="bg-light my-5">
@@ -269,64 +269,68 @@ body {
 
                         <form class="boxed" action="/buy" method="post">
                             <%for(i=0;i<userData.address.length;i++){%>
-                            <input type="radio" class="addressId" id="<%=userData.address[i]._id%>" checked name="address" required="true" value="<%=userData.address[i]._id%>">
-                            <label for="<%=userData.address[i]._id%>" class="d-flex">
-                                <%=userData.address[i].name%><br>
-                                <%=userData.address[i].number%>
-                                <%=userData.address[i].altNumber%><br>
-                                <%=userData.address[i].pincode%><br>
-                                <%=userData.address[i].house%>
-                                <%=userData.address[i].landmark%>
-                                <%=userData.address[i].town%>
-                                <%=userData.address[i].state%>
-                                <%=userData.address[i].country%>
-                            </label>
-                            <%}%>
-                            <br><br>
-                            <h2>Select Payment method</h2>  
-                            <div class="grid mb-4">
-
-                                <label class="card">
-                                  <input name="paymentMethod" class="radio" type="radio" value="cod"  checked>
-                                  <span class="plan-details">
-                                   
-                                    <img src="/cod.jpg" alt="cod-img">
-                                  </span>
+                                <input type="radio" class="addressId" id="<%=userData.address[i]._id%>" checked
+                                    name="address" required="true" value="<%=userData.address[i]._id%>">
+                                <label for="<%=userData.address[i]._id%>" class="d-flex">
+                                    <%=userData.address[i].name%><br>
+                                        <%=userData.address[i].number%>
+                                            <%=userData.address[i].altNumber%><br>
+                                                <%=userData.address[i].pincode%><br>
+                                                    <%=userData.address[i].house%>
+                                                        <%=userData.address[i].landmark%>
+                                                            <%=userData.address[i].town%>
+                                                                <%=userData.address[i].state%>
+                                                                    <%=userData.address[i].country%>
                                 </label>
+                                <%}%>
+                                    <br><br>
+                                    <h2>Select Payment method</h2>
+                                    <div class="grid mb-4">
 
-                                <label class="card">
-                                    <input name="paymentMethod" class="radio" type="radio"  value="razorpay">
-                                    <span class="plan-details">
-                                     
-                                      <img src="/razorpay.jpeg" alt="razorpay-img">
-                                    </span>
-                                </label>
+                                        <label class="card">
+                                            <input name="paymentMethod" class="radio" type="radio" value="cod" checked>
+                                            <span class="plan-details">
 
-                                <label class="card">
-                                    <input name="paymentMethod" class="radio" type="radio" value="paypal" >
-                                    <span class="plan-details">
-                                     
-                                      <img style="height:14rem;" src="paypal.jpeg" alt="paypal-img">
-                                    </span>
-                                </label>
+                                                <img src="/cod.jpg" alt="cod-img">
+                                            </span>
+                                        </label>
 
-                              </div>
-                              <%for(i=0;i<productDetails.length;i++){%>
+                                        <label class="card">
+                                            <input name="paymentMethod" class="radio" type="radio" value="razorpay">
+                                            <span class="plan-details">
 
-                              <div class="d-flex mb-3 border border-success rounded p-3">
-                                <img class="img-fluid" width="100px" src="/upload/product/<%=productDetails[i].ProductDetails[0].images[0]%>" alt="Product-img">
-                                <p for="name" class="ms-4">
-                                    <%=productDetails[i].ProductDetails[0].name%><br>
-                                    <s>₹<%=productDetails[i].ProductDetails[0].regularPrice%></s>
-                                    <b>₹<%=productDetails[i].ProductDetails[0].promotionalPrice%></b><br>
-                                    Quantity: <%=productDetails[i].quantity%>
-                                    
-                                </p>
-                            </div>
-                            <%}%>
+                                                <img src="/razorpay.jpeg" alt="razorpay-img">
+                                            </span>
+                                        </label>
 
-                            <input type="submit" value="SUBMIT">
-                        </form>  
+                                        <label class="card">
+                                            <input name="paymentMethod" class="radio" type="radio" value="paypal">
+                                            <span class="plan-details">
+
+                                                <img style="height:14rem;" src="paypal.jpeg" alt="paypal-img">
+                                            </span>
+                                        </label>
+
+                                    </div>
+                                    <%for(i=0;i<productDetails.length;i++){%>
+
+                                        <div class="d-flex mb-3 border border-success rounded p-3">
+                                            <img class="img-fluid" width="100px"
+                                                src="/upload/product/<%=productDetails[i].ProductDetails[0].images[0]%>"
+                                                alt="Product-img">
+                                            <p for="name" class="ms-4">
+                                                <%=productDetails[i].ProductDetails[0].name%><br>
+                                                    <s>₹<%=productDetails[i].ProductDetails[0].regularPrice%></s>
+                                                    <b>₹<%=productDetails[i].ProductDetails[0].promotionalPrice%>
+                                                            </b><br>
+                                                    Quantity: <%=productDetails[i].quantity%>
+
+                                            </p>
+                                        </div>
+                                        <%}%>
+
+                                            <input type="submit" value="SUBMIT">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -350,7 +354,9 @@ body {
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Total price:</p>
-                            <p  class="mb-2"><%=GrandTotal%></p>
+                            <p class="mb-2">
+                                <%=GrandTotal%>
+                            </p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Discount:</p>
@@ -363,11 +369,14 @@ body {
                         <hr />
                         <div class="d-flex justify-content-between">
                             <p class="mb-2">Total price:</p>
-                            <p class="mb-2 fw-bold"><%=userData.promotionalPrice%></p>
+                            <p class="mb-2 fw-bold">
+                                <%=userData.promotionalPrice%>
+                            </p>
                         </div>
 
                         <div class="mt-3">
-                            <a  onclick="makePurchase('<%=GrandTotal%>')" class="btn btn-success w-100 shadow-0 mb-2"> Make Purchase </a>
+                            <a onclick="makePurchase('<%=GrandTotal%>')" class="btn btn-success w-100 shadow-0 mb-2">
+                                Make Purchase </a>
                             <a href="#" class="btn btn-light w-100 border mt-2"> Back to shop </a>
                         </div>
                     </div>
@@ -618,44 +627,57 @@ body {
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 
 <script>
-    function makePurchase(GrandTotal){
-    
+    function makePurchase(GrandTotal) {
 
-        let addressId  = $(".addressId:checked").val();
-        let payment =  $(".radio:checked").val();
-         
+
+        let addressId = $(".addressId:checked").val();
+        let payment = $(".radio:checked").val();
+
 
         $.ajax({
-            url:'/makePurchase',
-            method:'post',
-            data:{
-                addressId : addressId,
-                payment : payment,
-                GrandTotal : GrandTotal
+            url: '/makePurchase',
+            method: 'post',
+            data: {
+                addressId: addressId,
+                payment: payment,
+                GrandTotal: GrandTotal
 
-            }, success:(response)=>{
-                    console.log(response.status)
-                    if(response.status == true){
-                        Swal.fire({
-                            title: 'Order Placed',
-                            text: 'Product has been ordered succesfully.',
-                            icon: 'success',
-                            timer: 5000
-                        })
-                    }else{
-                        Swal.fire({
-                            title: 'Error Occured',
-                            text: "Can't process order error occured",
-                            icon: 'fail',
-                            timer: 5000
-                        })
-                    
-                    }
+            }, success: (response) => {
+                console.log(response.status)
+                
+                if (response.status == true) {
+                    Swal.fire({
+                        title: "Order success",
+                        text: "order placed successfully",
+                        icon: "success",
+                        showCancelButton: true,
+                        confirmButtonText: "view orders",
+                        cancelButtonText: "continue shopping",
+                        reverseButtons: true
+                    }).then(function (result) {
+                        if (result.value) {
+                            location.href = '/orderDetails?id='+response.id
+                            // result.dismiss can be "cancel", "overlay",
+                            // "close", and "timer"
+                        } else if (result.dismiss === "cancel") {
+                            location.href = '/productList'
+                        }
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Error Occured',
+                        text: "Can't process order error occured",
+                        icon: 'fail',
+                        timer: 5000
+                    })
+
                 }
+            }
         })
     }
 </script>
