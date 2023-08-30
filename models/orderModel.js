@@ -15,7 +15,8 @@ let orderModel = new mongoose.Schema({
         default:0
     },
     userId:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
         required:true
     },
     payment:{
@@ -27,7 +28,7 @@ let orderModel = new mongoose.Schema({
         required:true
     },
     createdOn:{
-        type:String,
+        type:Date,
         required:true
     }
 });

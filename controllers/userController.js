@@ -349,6 +349,21 @@ module.exports ={
         } catch (error) {
             console.log(error.message);
         }
+    },
+
+    wishList:async(req,res)=>{
+        let user = req.session.isLoggedIn
+        let prodExist = await User.findOne({'wishList.proId':req.body.id,_id:user._id})
+        console.log(prodExist);
+        if(prodExist){
+            
+        }else{
+            let newWishlist = await User.findByIdAndUpdate(user._id,{$push:{wishList:{proId:req.body.id}}})
+            console.log(newWishlist,'ppp');
+        }
+        
+        
+
     }
  
 

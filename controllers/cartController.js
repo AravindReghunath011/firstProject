@@ -2,6 +2,9 @@ const  User  = require("../models/userModel");
 const productModel = require('../models/productModel');
 const orderModel = require('../models/orderModel')
 const mongodb = require('mongodb')
+const Razorpay = require('razorpay')
+var instance = new Razorpay({ key_id: 'rzp_test_sPwoxcRC0hnSFO', key_secret: 'FawYUz1dMjHVYWrf9ZEUjOXi' })
+
 
 module.exports={
     getCartPage:async(req,res)=>{
@@ -14,7 +17,7 @@ module.exports={
             var cartProducts = await User.aggregate([
                 {$match:{_id:oid}},
                 {$unwind:'$cart'},
-                {$project:{
+                {$project:{      
                     proId:{'$toObjectId':'$cart.productId'},
                     quantity:'$cart.quantity'
                 }},
@@ -25,15 +28,15 @@ module.exports={
                     as:'ProductDetails',
                 }}
             ])
-            console.log(cartProducts);
-
             let GrandTotal = 0
+            
+            
             for(let i=0;i<cartProducts.length;i++){
                 let qua = parseInt(cartProducts[i].quantity);
                 GrandTotal = GrandTotal+(qua*parseInt(cartProducts[i].ProductDetails[0].promotionalPrice))
             }
             console.log(GrandTotal,'=======.....................');
-           
+        
              
             
            
@@ -48,16 +51,22 @@ module.exports={
         try {
             console.log(req.body,'================================================================')
             let userId = req.session.isLoggedIn._id
-            let user = await User.findById(userId)
+            
             let userExist = await User.findOne({$and:[{_id:userId},{'cart.productId':req.body.proId}]})
-            let product = await productModel.findById(req.body.proId)
+            
 
             if(userExist){
                 console.log('iffffffffffffffffff');
-                let productExist  =  user.cart.find(item => item.productId==req.body.proId)
+                let productToCart = await productModel.findById(req.body.proId)
+                let productExist  =  userExist.cart.find(item => item.productId==req.body.proId)
+                console.log(productToCart,'pppppppppp');
                 let quantity = parseInt(req.body.quantity)
                 let existqa = parseInt(productExist.quantity)
                 let newqa = quantity+existqa
+                if(newqa>productToCart.unit){
+                    console.log('heloooooo99999999');
+                    res.json({status:false})
+                }else{
                 await User.updateOne({'cart.productId':req.body.proId},
                 {$set:{'cart.$.quantity':newqa}
 
@@ -72,8 +81,10 @@ module.exports={
                         res.json({status:false})
                     }
                 })
+            }
 
             }else{
+                let product = await productModel.findById(req.body.proId)
                 console.log('elsesseeeeeeeeeeeee');
                 let quantity = parseInt(req.body.quantity)
                 await User.findByIdAndUpdate(userId,{
@@ -150,17 +161,16 @@ module.exports={
         res.render('users/orderPage',{userData,productDetails,GrandTotal})
     },
     makePurchase:async(req,res)=>{
+        console.log('hrloooooo');
         console.log(req.body,'========================================================');
         req.body.GrandTotal = parseInt(req.body.GrandTotal)
         let user = req.session.isLoggedIn
         console.log(user._id);
-        // let userData = await User.findById(user._id)
-        // let address = await User.aggregate([{$unwind:'$address'},{$match:{'address._id':req.body.addressId}},{$project:{address:1}}])
         let oid = new mongodb.ObjectId(user._id)
         let data = await User.aggregate([
             {
                 $match:{_id:oid}
-            },
+            }, 
             {
                 $unwind:'$address'
             },
@@ -169,14 +179,17 @@ module.exports={
             }
 
         ]) 
-        console.log(data);
+        
+        console.log(data[0].cart);
         const date = new Date();
 
-            const day = date.getDate(); // Returns the day of the month (1-31)
-            const month = date.getMonth() + 1; // Returns the month (0-11), so adding 1 to get 1-12
-            const year = date.getFullYear(); // Returns the year (e.g., 2023)
 
-            let createdOn = ` ${day}/${month}/${year}`
+            
+            for(products of data[0].cart){
+                console.log(products,'helo');
+                console.log(products.quantity)
+                const updateProduct = await productModel.findByIdAndUpdate(products.productId,{$inc : {unit : -products.quantity}})
+        }
         
         let newOrder = new orderModel({
             address:data[0].address,
@@ -185,18 +198,52 @@ module.exports={
             status:0,
             payment:req.body.payment,
             userId:user._id,
-            createdOn:createdOn
+            createdOn:date
         })
+        
+        
 
-        newOrder.save().then((status)=>{
-            console.log('=====================================================');
-            console.log(status);
-            res.json({status:true,id:newOrder._id})
-        }).catch((err)=>{
-            console.log(err.message);
-        })
+         
+
+        await newOrder.save()
+
+
+        if(newOrder.payment == 'razorpay'){
+            instance.orders.create({
+                amount: newOrder.GrandTotal,
+                currency: "INR",
+                receipt: newOrder._id,
+              }).then((response)=>{
+                res.json({status:'razorpay',order:response})
+                
+              })
+        }else if(newOrder.payment == 'cod'){
+            res.json({status:'cod'})
+        }else{
+            res.json({status:false})
+        }
         
         
+    },
+    verify:(req,res)=>{
+        console.log(req.body);
+       const crypto = require('crypto')
+       let hmac = crypto.createHmac('sha256','FawYUz1dMjHVYWrf9ZEUjOXi')
+       console.log(req.body['payment[razorpay_payment_id]'] ,'gggggggggggggg ');
+       hmac.update(req.body['payment[razorpay_order_id]']+ '|'+ req.body['payment[razorpay_payment_id]']) 
+       hmac = hmac.digest('hex')
+       console.log(hmac);
+       console.log(req.body['payment[razorpay_signature]']);
+       
+       if(hmac==req.body['payment[razorpay_signature]']){
+        console.log('entrd');
+        res.json({status:true})
+       }else{
+        console.log('elsee');
+        res.json({status:false})
+       }
     }
+
+    
 
 }

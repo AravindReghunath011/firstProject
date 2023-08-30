@@ -32,6 +32,10 @@ let userModel = new mongoose.Schema({
     address:{
         type:Array,
         default:[]
+    },
+    wishList:{
+        type:Array,
+        default:[]
     }
     
 });

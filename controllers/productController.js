@@ -18,11 +18,11 @@ module.exports={
             unit:req.body.unit,
             regularPrice:req.body.Rprice,
             promotionalPrice:req.body.Pprice,
-            gst:req.body.gst,
             images:[req.files[0].filename,req.files[1].filename,req.files[2].filename,req.files[3].filename]
         })
 
         product.save().then((status)=>{
+           
             res.redirect('/admin/products')
         }).catch((err)=>{
             console.log(err.message);
@@ -37,7 +37,32 @@ module.exports={
         
     },
     showProducts:async(req,res)=>{
-        let products = await productModel.find({}).lean()
+        
+        
+        var products = await productModel.aggregate([
+            
+            {$project:{
+                name:1,
+                description:1,
+                unit:1,
+                regularPrice:1,
+                promotionalPrice:1,
+                images:1,
+                catId:{'$toObjectId':'$category'},
+                
+            }},
+            {$lookup:{
+                from:'categories', 
+                localField:'catId', 
+                foreignField:'_id',
+                as:'categoryDetails',
+            }},{
+            $match:{
+                'categoryDetails.isListed':1
+            }}
+        ])
+
+        console.log(products,'kkkkkkkkkkkkkkkkkkk');
         res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn})
     },
     adminProductList:async(req,res)=>{
@@ -117,6 +142,11 @@ module.exports={
         
 
     },
+    searchProd:async(req,res)=>{
+        let products = await productModel.find(req.query.id)
+        console.log(products);
+        res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn})
+    }
     
     
 }

@@ -19,6 +19,8 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 </head>
 <%- include('../partials/user-header')%>
 
@@ -60,12 +62,14 @@
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                             <input name="quantity" type="text" id="<%=cart[i].ProductDetails[0]._id%>" class="form-control text-center border border-secondary" value="<%=cart[i].quantity%>" aria-label="Example text with button addon" aria-describedby="decrementButton" />
-                                            <button class="btn btn-white border border-secondary px-3" type="button" id="incrementButton" data-mdb-ripple-color="dark" onclick="changeQuantity('<%=cart[i]._id%>' , '<%=cart[i].proId%>' ,1)">
+                                            <button class="btn btn-white border border-secondary px-3" type="button" id="incrementButton" data-mdb-ripple-color="dark" onclick="changeQuantity('<%=cart[i]._id%>' , '<%=cart[i].proId%>' ,1,'<%=cart[i].ProductDetails[0].unit%>'); ">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                             </div>
                                             <div class="mt-4">
-                                                <p>Size:</p>
+                                                <%if(cart[i].ProductDetails[0].unit<10){%>
+                                                <p>only <%=cart[i].ProductDetails[0].unit%> products left</p>
+                                                <%}%>
                                             </div>
                                         </div>
         
@@ -107,6 +111,8 @@
             </div>
             <!-- cart -->
             <!-- summary -->
+            <%if(cart){%>
+                <%if(cart.length){%>
             <div class="col-lg-3">
                 <div class="card mb-3 border shadow-0">
                     <div class="card-body">
@@ -150,6 +156,8 @@
                 </div>
            
             </div>
+            <%}%>
+                            <%}%>
             <!-- summary -->
         </div>
     </div>
@@ -157,8 +165,29 @@
 
 
   <script>
+
     
-        function changeQuantity(userId,proId,count){
+        function changeQuantity(userId,proId,count,unit){
+           
+            let quantity = document.getElementById(proId).value
+            quantity = parseInt(quantity)
+            if(unit<quantity+1){
+                
+                let quantity = document.getElementById(proId).value;
+        quantity = parseInt(quantity)
+        unit = parseInt(unit)
+        if(quantity+1>unit){
+            Swal.fire({
+                    title: 'STOCK!',
+                    text: 'Product is out of stock.',
+                    icon: 'error',
+                    timer: 5000
+                })
+            
+        }
+
+            }else{
+            
             let proTotal = document.getElementById(proId + 'pro-total').innerHTML;
         let price = document.getElementById(proId + 'price').innerHTML;
         proTotal = parseInt(proTotal);
@@ -175,7 +204,8 @@
             document.getElementById('grand-total').innerHTML = parseInt(GrandTotal) - parseInt(price);
         }
 
-            let quantity = document.getElementById(proId).value
+           
+            
             $.ajax({
                 url:"/change-quantity",
                 method:'post',
@@ -197,6 +227,8 @@
                 }
             })
         }
+      
+        }
 
 
         function removeProduct(proId){
@@ -212,12 +244,16 @@
                     location.reload()
                     console.log('heloooo');
                     return confirm(' You sure to remove?')
+                    
+                   
                         
                        
                     
                 }
             })
         }
+
+        
    
 
     

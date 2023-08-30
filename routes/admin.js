@@ -24,7 +24,7 @@ router.post('/products',productUpload.array('images',4), productController.addPr
 
 router.get('/productList',productController.adminProductList)
 
-router.get('/usersList',adminController.usersList)
+router.get('/usersList',adminController.usersList) 
 
 router.get('/block-user',adminController.blockUser)
 router.get('/unblock-user',adminController.unblockUser)
@@ -35,6 +35,10 @@ router.post('/editCategory',categoryUpload.single('image'),categoryController.ed
 router.get('/list',categoryController.list)
 router.get('/unlist',categoryController.unlist)
 router.get('/orderList',adminController.orderList)
+router.get('/salesToday',adminController.salesToday)
+router.get('/salesWeekly',adminController.salesWeekly)
+router.get('/salesMonthly',adminController.salesMonthly)
+// router.get('/salesYearly',adminController.salesYearly)
 
 
 

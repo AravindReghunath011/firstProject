@@ -1,6 +1,8 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs')
-const orderModel = require('../models/orderModel')
+const orderModel = require('../models/orderModel');
+const productModel = require('../models/productModel');
+const { default: mongoose } = require('mongoose');
 
 module.exports = {
     getadminLogin:(req,res)=>{
@@ -24,7 +26,9 @@ module.exports = {
         }
     },
     usersList:async(req,res)=>{
-        let users = await User.find({isAdmin:0})
+        let usersPerPage = 2
+        let page = req.query.p || 0
+        let users = await User.find({isAdmin:0}).skip(usersPerPage * page).limit(usersPerPage)
         console.log(users);
         console.log(users.isVarified);
         res.render('admin/usersList',{users})
@@ -49,6 +53,123 @@ module.exports = {
         } catch (error) {
             console.log(error.message);
         }
+    },
+    salesToday:async(req,res)=>{
+        let todaysales = new Date()
+        const startOfDay = new Date(
+            todaysales.getFullYear(),
+            todaysales.getMonth(),
+            todaysales.getDate(),
+            0,
+            0,
+            0,
+            0
+        );
+
+        const endOfDay = new Date(
+            todaysales.getFullYear(),
+            todaysales.getMonth(),
+            todaysales.getDate(),
+            23,
+            59,
+            59,
+            999
+        );
+
+        const order = await orderModel.find({
+            
+            createdOn: {
+                $gte: startOfDay,
+                $lt: endOfDay
+            }
+        }).sort({ createdOn: -1 });
+
+            console.log(order,'gggg');
+
+            res.render('admin/salesReport',{order})
+        
+    },
+    salesWeekly:async(req,res)=>{
+        const currentDate = new Date();
+
+        const startOfWeek = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() - currentDate.getDay()
+        );
+        const endOfWeek = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate() + (6 - currentDate.getDay()),
+            23,
+            59,
+            59,
+            999
+        );
+        console.log(currentDate<endOfWeek);
+        console.log(endOfWeek);
+
+        const order = await orderModel.find({
+            
+            createdOn: {
+                $gte: startOfWeek,
+                $lt: endOfWeek
+            }
+        }).sort({ createdOn: -1 });
+
+            console.log(order,'jjjjj');
+
+            res.render('admin/salesReport',{order})
+    },salesMonthly:async(req,res)=>{
+        const thisMonth = new Date().getMonth() + 1;
+        const startofMonth = new Date(
+            new Date().getFullYear(),
+            thisMonth - 1,
+            1,
+            0,
+            0,
+            0,
+            0
+        );
+        const endofMonth = new Date(
+            new Date().getFullYear(),
+            thisMonth,
+            0,
+            23,
+            59,
+            59,
+            999
+        );
+
+        const order = await orderModel.find({
+            
+            createdOn: {
+                $gte: startofMonth,
+                $lt: endofMonth
+            }
+        }).sort({ createdOn: -1 });
+
+            console.log(order,'yyyyyyyy');
+            res.render('admin/salesReport',{order})
+    },
+    salesYearly:async(req,res)=>{
+        const today = new Date().getFullYear();
+        const startofYear = new Date(today, 0, 1, 0, 0, 0, 0);
+        const endofYear = new Date(today, 11, 31, 23, 59, 59, 999);
+
+
+        const order = await orderModel.find({
+            
+            createdOn: {
+                $lt: endofYear,
+                $gte: startofYear,
+            }
+        }).sort({ createdOn: -1 });
+
+        res.render('admin/salesReport',{order})
     }
+    
+
+    
     
 }

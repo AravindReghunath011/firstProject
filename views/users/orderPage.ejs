@@ -222,50 +222,7 @@
                             Select Address
                         </h1>
                         <a href="/address" class="btn btn-info" style="margin-left: 35rem;">Add address</a>
-                        <!-- <div class="row gy-3 mb-4">
-                            <div class="col-lg-5">
-                                <div class="me-lg-5">
-                                    <div class="d-flex">
-                                        <img src="/upload/product"
-                                            class="border rounded me-3" style="width: 96px; height: 96px;" />
-                                        <div class="">
-                                            <a href="#" class="nav-link">Name</a>
-                                            <p class="text-muted">Yellow, Jeans</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                <div class="col-md-4 col-6 mb-3">
-                                    <label class="mb-2 d-block">Quantity</label>
-                                    <div class="input-group mb-3" style="width: 170px;">
-                                    <button class="btn btn-white border border-secondary px-3" type="button" id="decrementButton" data-mdb-ripple-color="dark"">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input name="quantity" type="text" class="form-control text-center border border-secondary"  aria-label="Example text with button addon" aria-describedby="decrementButton" />
-                                    <button class="btn btn-white border border-secondary px-3" type="button" id="incrementButton" data-mdb-ripple-color="dark">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                    </div>
-                                    <div class="mt-4">
-                                        <p>Size:</p>
-                                    </div>
-                                </div>
-
-                            <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
-                                <div class="">
-                                    <text class="h6">$1156.00</text> <br />
-                                    <small class="text-muted text-nowrap"> 100 / per item </small>
-                                </div>
-                            </div>
-                            <div
-                                class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-                                <div class="float-md-end">
-                                    <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i
-                                            class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                                    <a href="#" class="btn btn-light border text-danger icon-hover-danger"> Remove</a>
-                                </div>
-                            </div>
-                        </div> -->
+                       
 
                         <form class="boxed" action="/buy" method="post">
                             <%for(i=0;i<userData.address.length;i++){%>
@@ -630,7 +587,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+    
     function makePurchase(GrandTotal) {
 
 
@@ -649,7 +608,7 @@
             }, success: (response) => {
                 console.log(response.status)
                 
-                if (response.status == true) {
+                if (response.status == 'cod') {
                     Swal.fire({
                         title: "Order success",
                         text: "order placed successfully",
@@ -668,7 +627,39 @@
                         }
                     });
 
-                } else {
+                }else if(response.status == 'razorpay'){
+                    alert(response.order.id)
+                    var options = {
+                            "key": "rzp_test_sPwoxcRC0hnSFO", // Enter the Key ID generated from the Dashboard
+                            "amount": response.order.GrandTotal, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                            "currency": "INR",
+                            "name": "Future Furniture", //your business name
+                            "description": "Test Transaction",
+                            "image": "https://example.com/your_logo",
+                            "order_id": response.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                            "handler": function (status){
+                                alert(status.razorpay_payment_id);
+                                alert(status.razorpay_order_id);
+                                alert(status.razorpay_signature)
+                                verifyPayment(response.order,status)
+                            },
+                            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                                "name": "Gaurav Kumar", //your customer's name
+                                "email": "gaurav.kumar@example.com", 
+                                "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+                            },
+                            "notes": {
+                                "address": "Razorpay Corporate Office"
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
+
+
+                }else {
                     Swal.fire({
                         title: 'Error Occured',
                         text: "Can't process order error occured",
@@ -677,6 +668,38 @@
                     })
 
                 }
+            }
+        })
+    }
+
+    function verifyPayment(order,payment){
+        $.ajax({
+            url:'/verifyPayment',
+            method:'post',
+            data:{
+                order,
+                payment
+            },success:(response)=>{
+                if(response.status){
+                    Swal.fire({
+                        title: "Order success",
+                        text: "order placed successfully",
+                        icon: "success",
+                        showCancelButton: true,
+                        confirmButtonText: "view orders",
+                        cancelButtonText: "continue shopping",
+                        reverseButtons: true
+                    }).then(function (result) {
+                        if (result.value) {
+                            location.href = '/orderDetails?id='+response.id
+                            // result.dismiss can be "cancel", "overlay",
+                            // "close", and "timer"
+                        } else if (result.dismiss === "cancel") {
+                            location.href = '/productList'
+                        }
+                    });
+                }
+
             }
         })
     }

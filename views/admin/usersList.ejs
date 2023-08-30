@@ -258,14 +258,16 @@
             </div> <!-- card end// -->
             <div class="pagination-area mt-15 mb-50">
                 <nav aria-label="Page navigation example">
+                   
                     <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                        
+                        <%for(i=0;i<3;i++){%>
+                            
+                        <li class="page-item " ><a class="page-link" id="helo<%=i%>" onclick="helo('<%=i%>')" href=""><%=i+1%></a></li>
+                       
+                        <%}%>
                     </ul>
+                    
                 </nav>
             </div>
         </section> <!-- content-main end// -->
@@ -296,3 +298,10 @@
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-sellers-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:23 GMT -->
 </html>
+
+<script>
+    function helo(i){
+        alert('heil')
+        document.getElementById('helo'+i).href = '/admin/usersList?p='+hehe
+    }
+</script>

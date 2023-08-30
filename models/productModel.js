@@ -27,10 +27,6 @@ let productModel = new mongoose.Schema({
         type:Number,
         required:true
     },
-    gst:{
-        type:Number,
-        required:true
-    },
     images:{
         type:Array,
         required:true

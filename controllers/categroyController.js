@@ -4,6 +4,7 @@ const {Rembg} = require('rembg-node');
 const sharp = require('sharp');
 const categoryModel = require('../models/categoryModel');
 const { log } = require('debug/src/node');
+const orderModel = require('../models/orderModel');
 
 
 
@@ -169,5 +170,17 @@ module.exports={
       }catch(error){
         console.log(error.message);
       }
-    }
+    },
+    searchCategory:async(req,res)=>{
+      console.log(req.body.search,'hjkjhj');
+      let categories = await categoryModel.find({
+        name: { $regex: `^${req.body.search}`, $options: 'i' }
+    });
+    
+    console.log(categories,'dfghjkl');
+    
+
+    res.render('users/userCategoryList',{categories,isLoggedIn:req.session.isLoggedIn})
+    },
+   
 }

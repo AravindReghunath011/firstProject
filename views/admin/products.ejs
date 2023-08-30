@@ -17,6 +17,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/assets/css/main.css" rel="stylesheet" type="text/css" />
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap-growl@3.1.3/bootstrap-notify.min.js"></script>
 </head>
 
 <body>
@@ -191,7 +192,7 @@
                 </ul>
             </div>
         </header>
-        <form method="post" enctype="multipart/form-data" class="content-main">
+        <form method="post" action="/admin/products" enctype="multipart/form-data" class="content-main">
             <div class="row">
                 <div class="col-9">
                     <div class="content-header">
@@ -240,7 +241,7 @@
                                
                                 <div class="d-flex justify-content-end">
                             
-                                    <button onclick="validate()" type="submit" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
+                                    <button onclick="validate(); addAlert();" type="submit" class="btn btn-md rounded font-sm col-lg-4 hover-up">Add product</button>
                                 </div>
                                 
                             
@@ -314,11 +315,12 @@
 </html>
 
 <script>
+    
 
     function validate(){
         document.getElementById('err-msg').innerHTML = ''
         let name = document.getElementById('name').value;
-        const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+        const nameRegex = /^(?!\s*$).+/;
 
         if(nameRegex.test(name)){
             document.getElementById('name').style.borderColor = 'white'
