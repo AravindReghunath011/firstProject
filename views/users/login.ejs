@@ -72,7 +72,7 @@
           </div>
           
       <div class="form-group">
-              <input id="password" type="password" value="Aravind123" class="form-control" name="password" placeholder="Password" required="required">
+              <input id="password" type="password" value="Aravind1234" class="form-control" name="password" placeholder="Password" required="required">
           </div>
         
           <div class="form-group">
@@ -81,7 +81,7 @@
               <button onclick="validate()" type="submit" class="btn btn-primary btn-lg">Login</button>
               <label for="" class="ms-5"> <a href="/otpLoginPage">Login using otp</a></label>
               <%if(err){%>
-              <p id="err-msg"></p>
+              <p id="err-msg" class="text-danger"><%=err%></p>
               <%}%>
           </div>
           <a href="/forgetPassword"><u>forgot password?</u></a>

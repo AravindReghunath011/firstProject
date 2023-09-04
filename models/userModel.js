@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const mongoose =  require('mongoose');
 
 
@@ -33,9 +34,14 @@ let userModel = new mongoose.Schema({
         type:Array,
         default:[]
     },
-    wishList:{
-        type:Array,
-        default:[]
+    wishList: [{
+        proId:{
+            type:mongoose.Types.ObjectId,
+            default:null
+        }
+    }],
+    wallet:{
+        type:Number,
     }
     
 });

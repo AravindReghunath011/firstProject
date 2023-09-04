@@ -153,11 +153,18 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/categories" method="post" enctype="multipart/form-data">
+                            <form action="/admin/banner" method="post" enctype="multipart/form-data">
                                 <div class="mb-4">
                                     <label for="product_name" id="name" class="form-label name">Name</label>
                                     <input type="text" name="category" id="name" placeholder="Type here" class="form-control" id="product_name" />
                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="product_name" id="name" class="form-label name">description</label>
+                                    
+                                        <textarea name="description" class="form-control" id="description" cols="30" rows="10">Description</textarea>
+                                </div>
+
                                
                                 <div class="mb-4">
                                     <label for="product_slug" class="form-label">Image</label>
@@ -167,55 +174,13 @@
                                <p id="err-msg"></p>
                                
                                 <div class="d-grid">
-                                    <button  onclick="validate('<%=Err%>')" class="btn btn-primary">create category</button>
+                                    <button   class="btn btn-primary">create category</button>
                                 </div>
                             </form>
                         </div>
                         <div class="col-md-9">
                             <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th >No</th>
-                                            <th>Name</th>
-                                            <th>Image</th>
-                                            
-                                           <th>status</th>
-                                            
-                                            <th class="text-end">action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody >
-                                        <%data.reverse()%>
-                                        <%for(i = 0;i<data.length;i++){%>
-                                        <tr>
-                                            <td></td>
-                                            <td><%=i+1%></td>
-                                            <td><b><%=data[i].name%></b></td>
-                                            <td><img style="width: 100px;" src="/upload/category/<%=data[i].image%>" alt=""></td>
-                                            
-                                            <td>
-                                                <%if(data[i].isListed==1){%>
-                                                    <span class="badge rounded-pill alert-success">Listed</span>
-                                                    <%}else{%>
-                                                        <span class="badge rounded-pill alert-danger">UnListed</span>
-                                                    <%}%>
-                                            </td>
-                                          
-                                            <td class="text-end"><a class="btn btn-sm btn-brand" href="/admin/editCategory?id=<%=data[i]._id%>">Edit</a>
-                                                <%if(data[i].isListed==0){%>
-                                            <a class="btn btn-sm btn-success" href="/admin/list?id=<%=data[i]._id%>">list</a>
-                                            <%}else{%>
-                                                <a class="btn btn-sm btn-danger" href="/admin/unlist?id=<%=data[i]._id%>">unlist</a>
-                                                <%}%>
-                                            </td>
-
-                                            
-                                        </tr>   
-                                        <% }%>
-                                    </tbody>
-                                </table>
+                               
                             </div>
                         </div> <!-- .col// -->
                     </div> <!-- .row // -->

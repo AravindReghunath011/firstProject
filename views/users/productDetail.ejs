@@ -202,14 +202,22 @@
                             icon: 'success',
                             timer: 5000
                         })
-                  }else{
+                  }else if(response.status==false){
                     Swal.fire({
                             title: 'Stock!!',
-                            text: 'product is out of stock',
+                             text: 'product is out of stock',
                             icon: 'error',
                             timer: 5000
-                        }) 
-                  }     
+                        })
+                  }else{
+                    Swal.fire({
+                            title: 'login!!',
+                             text: 'you should login to add product to cart',
+                            icon: 'warning',
+                            timer: 5000
+                        })
+
+                  }   
                             
                     
                 }

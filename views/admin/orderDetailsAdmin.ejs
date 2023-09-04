@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
 <head>
     <meta charset="utf-8">
     <title>Evara Dashboard</title>
@@ -14,7 +14,7 @@
     <meta property="og:url" content="">
     <meta property="og:image" content="">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/assets/css/main.css" rel="stylesheet" type="text/css" />
 </head>
@@ -53,9 +53,9 @@
                         <span class="text">Orders</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-orders-1.html" class="active">Order list 1</a>
+                        <a href="page-orders-1.html">Order list 1</a>
                         <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html">Order detail</a>
+                        <a href="page-orders-detail.html" class="active">Order detail</a>
                     </div>
                 </li>
                 <li class="menu-item has-submenu">
@@ -192,90 +192,117 @@
         <section class="content-main">
             <div class="content-header">
                 <div>
-                    <h2 class="content-title card-title">Order List </h2>
-                    <p>Lorem ipsum dolor sit amet.</p>
-                </div>
-                <div>
-                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                    <h2 class="content-title card-title">Order detail</h2>
+                    <p>Details for Order ID: <%=order._id%></p>
                 </div>
             </div>
-            <div class="card mb-4">
+            <div class="card">
                 <header class="card-header">
-                    <div class="row gx-3">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input type="text" placeholder="Search..." class="form-control">
+                    <form action="/admin/changeStatus?id=<%=order._id%>" method="post">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                            <span>
+                                <i class="material-icons md-calendar_today"></i> <b><%=order.createdOn%></b>
+                            </span> <br>
+                            <small class="text-muted">Order ID: <%=order._id%> </small>
                         </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
-                                <option>Status</option>
-                                <option>Active</option>
-                                <option>Disabled</option>
-                                <option>Show all</option>
+                        
+                        <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                            <select name="status" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
+                                <%if(order.status==0){%>
+                                <option selected>pending </option>
+                                <option>completed</option>
+                                <%}else if(order.status==1){%>
+                                <option >pending </option>
+                                <option selected>completed</option>
+                                <%}else{%>
+                                    <option selected>cancelled</option>
+                                <%}%>
+                                
+                                
                             </select>
-                        </div>
-                        <div class="col-lg-2 col-6 col-md-3">
-                            <select class="form-select">
-                                <option>Show 20</option>
-                                <option>Show 30</option>
-                                <option>Show 40</option>
-                            </select>
+                            <button class="btn btn-primary" type="submit" href="#">Save</button>
+                        
+                            <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
                         </div>
                     </div>
+                </form>
                 </header> <!-- card-header end// -->
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Mobile</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col" class="text-end"> Action </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%for(i=0;i<orders.length;i++){%>
-                                <tr>
-                                    <td><%=orders[i]._id%></td>
-                                    <td><b><%=orders[i].address.name%></b></td>
-                                    <td><%=orders[i].address.number%></td>
-                                    <td>&#8377;<%=orders[i].GrandTotal%></td>
-                                    <td><%if(orders[i].status == 0){%>
-                                        <span class="badge rounded-pill alert-warning">Pending</span>
-                                        <%}else if(orders[i].status == 1){%>
-                                            <span class="badge rounded-pill alert-success">completed</span>
-                                            
-                                            <%}else{%>
-                                                <span class="badge rounded-pill alert-danger">cancelled</span>
-                                            <%}%>
-                                    </td>
-                                    <td><%=orders[i].createdOn%></td>
-                                    <td class="text-end">
-                                        <a href="/admin/orderDetailsAdmin?id=<%=orders[i]._id%>" class="btn btn-md rounded font-sm">Detail</a>
-                                        <!-- dropdown //end -->
-                                    </td>
-                                </tr>
-                                <%}%>
-                            </tbody>
-                        </table>
-                    </div> <!-- table-responsive //end -->
+                    <div class="row mb-50 mt-20 order-info-wrap">
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-person"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Customer</h6>
+                                    <p class="mb-1">
+                                        <%=order.address.name%>  <br>  <%=order.address.number%>
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-local_shipping"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Order info</h6>
+                                    <p class="mb-1">
+                                        Shipping Address: <%=order.address.house%>  <br> Pay method: <%=order.payment%> <br> Status: <%=order.status%>
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                        <div class="col-md-4">
+                            <article class="icontext align-items-start">
+                                <span class="icon icon-sm rounded-circle bg-primary-light">
+                                    <i class="text-primary material-icons md-place"></i>
+                                </span>
+                                <div class="text">
+                                    <h6 class="mb-1">Deliver to</h6>
+                                    <p class="mb-1">
+                                        City: <%=order.address.town%>,<%=order.address.state%> <br><%=order.address.pincode%> 
+                                    </p>
+                                    
+                                </div>
+                            </article>
+                        </div> <!-- col// -->
+                    </div> <!-- row // -->
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="40%">Product Id</th>
+                                            <th width="20%">Unit Price</th>
+                                            <th width="20%">Quantity</th>
+                                            <th width="20%" class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%for(i=0;i<order.products.length;i++){%>
+                                        <tr>
+                                            <td><%=order.products[i].productId%></td>
+                                            <td> <%=order.products[i].price%> </td>
+                                            <td> <%=order.products[i].quantity%> </td>
+                                            <td class="text-end"><%=parseInt(order.products[i].price) * parseInt(order.products[i].quantity)%> </td>
+                                        </tr>
+                                        <%}%>
+                                    </tbody>
+                                </table>
+                            </div> <!-- table-responsive// -->
+                        </div> <!-- col// -->
+                        <div class="col-lg-1"></div>
+                       
+                    </div>
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
-            <div class="pagination-area mt-15 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#">16</a></li>
-                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
-                    </ul>
-                </nav>
-            </div>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
@@ -302,5 +329,5 @@
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
 </html>

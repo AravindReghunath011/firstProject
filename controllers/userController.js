@@ -3,12 +3,14 @@ const bcrypt = require('bcryptjs')
 const nodemailer =require('nodemailer')
 const config = require('../config/config');
 const categoryModel = require('../models/categoryModel');
+const mongodb = require('mongodb')
 const { log } = require('debug/src/browser');
 const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd79a471225b8ac858848f636c');
 
 module.exports ={
     getUserlogin:(req,res)=>{
         res.render('users/login',{err:req.session.loginPassErr,nouser:req.session.noUser})
+        req.session.loginPassErr = false
 
     },
     userLogin:async(req,res)=>{        
@@ -25,8 +27,9 @@ module.exports ={
                     req.session.isLoggedIn = user
                     res.redirect('/')
                 }else{
-                    req.session.loginPassErr = true
+                    req.session.loginPassErr = 'You have been blocked by admin'
                     res.redirect('/login')
+                    
 
                 }
             }else{
@@ -258,7 +261,7 @@ module.exports ={
     },
     getAddressPage:(req,res)=>{
         try {
-            res.render('users/addressPage',{isLoggedIn :req.session.isLoggedIn})
+            res.render('users/addressPage',{isLoggedIn :req.session.isLoggedIn,status:1})
         } catch (error) {
             console.log(error.message);
         }
@@ -282,8 +285,13 @@ module.exports ={
             }}})
 
             if(newAddress){
+                if(req.query.status==1){
+                    res.redirect('/profile')
+                }else{
+                    res.redirect('/buy')
+                }
                 console.log(newAddress);
-                res.redirect('/profile')
+                
             }else{
                 req.session.addAddressErr = true
                 res.redirect('/address',{Err: req.session.addAddressErr})
@@ -355,15 +363,57 @@ module.exports ={
         let user = req.session.isLoggedIn
         let prodExist = await User.findOne({'wishList.proId':req.body.id,_id:user._id})
         console.log(prodExist);
-        if(prodExist){
+        if(prodExist){ 
             
         }else{
-            let newWishlist = await User.findByIdAndUpdate(user._id,{$push:{wishList:{proId:req.body.id}}})
+            let newWishlist = await User.findByIdAndUpdate(user._id,{$push:{'wishList':{proId:req.body.id}}})
             console.log(newWishlist,'ppp');
         }
         
         
 
+    },
+    getWishlist:async(req,res)=>{
+        let user = req.session.isLoggedIn
+        if(!user){
+            res.redirect('/login')
+        }else{
+        let oid = new mongodb.ObjectId(user._id)
+        let wishlist =  await User.aggregate([
+            {$match:{_id:oid}},
+            {$unwind:'$wishList'},
+            {$project:{      
+                proId:{'$toObjectId':'$wishList.proId'},
+                
+            }},
+            {$lookup:{
+                from:'products',  
+                localField:'proId', 
+                foreignField:'_id',
+                as:'ProductDetails',
+            }}
+        ])
+        console.log(wishlist,'ghjk ');
+        res.render('users/wishList',{wishList:wishlist,isLoggedIn:req.session.isLoggedIn})
+    }
+    },
+    removeProductFromWishlist:async(req,res)=>{
+        console.log('==========================================================helo');
+        let id = req.session.isLoggedIn._id
+        let proId = req.body.proId
+        console.log(proId);
+        console.log(req.session.isLoggedIn);
+        User.updateOne({_id:id},{ $pull: { wishList: { proId: proId } } }).then((status)=>{
+            console.log('heloo froom controller');
+            res.json({status:true})
+        })
+    },
+    addressFromPurchase:(req,res)=>{
+        try {
+            res.render('users/addressPage',{isLoggedIn :req.session.isLoggedIn,status:0})
+        } catch (error) {
+            console.log(error.message);
+        }
     }
  
 

@@ -24,7 +24,7 @@ module.exports={
         product.save().then((status)=>{
            
             res.redirect('/admin/products')
-        }).catch((err)=>{
+        }).catch((err)=>{  
             console.log(err.message);
             
             res.redirect('/admin/products')
@@ -47,6 +47,7 @@ module.exports={
                 unit:1,
                 regularPrice:1,
                 promotionalPrice:1,
+                category:1,
                 images:1,
                 catId:{'$toObjectId':'$category'},
                 
@@ -143,7 +144,10 @@ module.exports={
 
     },
     searchProd:async(req,res)=>{
-        let products = await productModel.find(req.query.id)
+       
+        let products = await productModel.find({
+            name: { $regex: `${req.body.search}`, $options: 'i' }
+        });
         console.log(products);
         res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn})
     }

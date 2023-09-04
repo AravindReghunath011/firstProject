@@ -261,9 +261,9 @@
                    
                     <ul class="pagination justify-content-start">
                         
-                        <%for(i=0;i<3;i++){%>
+                        <%for(i=0;i<noOfPages;i++){%>
                             
-                        <li class="page-item " ><a class="page-link" id="helo<%=i%>" onclick="helo('<%=i%>')" href=""><%=i+1%></a></li>
+                        <li class="page-item " id="li<%=i%>" onpointerup="helo('<%=i%>')"><a class="page-link" id="id<%=i%>"  href=""><%=i+1%></a></li>
                        
                         <%}%>
                     </ul>
@@ -300,8 +300,15 @@
 </html>
 
 <script>
+   alert(users)
+   alert('hu')
+   
     function helo(i){
-        alert('heil')
-        document.getElementById('helo'+i).href = '/admin/usersList?p='+hehe
+        
+        document.getElementById('id'+i).href = '/admin/usersList?p='+i
+        document.getElementById('li'+1).classList.add("active")
+        
+        
     }
+   
 </script>

@@ -27,11 +27,16 @@ module.exports = {
     },
     usersList:async(req,res)=>{
         let usersPerPage = 2
-        let page = req.query.p || 0
+        let page = parseInt(req.query.p) || 0
+        
+        
         let users = await User.find({isAdmin:0}).skip(usersPerPage * page).limit(usersPerPage)
         console.log(users);
         console.log(users.isVarified);
-        res.render('admin/usersList',{users})
+        let noOfPages = await User.find().count() /2
+        noOfPages = Math.round(noOfPages) 
+        console.log(noOfPages);
+        res.render('admin/usersList',{users,noOfPages})
     },
     blockUser:async(req,res)=>{
         id = req.query.id
@@ -167,6 +172,25 @@ module.exports = {
         }).sort({ createdOn: -1 });
 
         res.render('admin/salesReport',{order})
+    },
+    changeStatus:async(req,res)=>{
+        console.log(req.query.id);
+        if(req.body.status=='pending'){
+             var status = 0
+        }else if(req.body.status == 'completed'){
+            var status = 1
+        }else{
+            res.redirect('/admin/orderList')    
+        }
+        let order = await orderModel.findByIdAndUpdate(req.query.id,{status:status},{new:true})
+        console.log(order);
+        res.redirect('/admin/orderList')
+    },
+    addBanner:(req,res)=>{
+        res.render('admin/addBanner')
+    },
+    banner:(req,res)=>{
+        console.log(req.file);
     }
     
 

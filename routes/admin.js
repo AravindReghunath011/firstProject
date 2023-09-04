@@ -2,10 +2,13 @@ const express = require('express');
 const router = express.Router();
 const categoryUpload = require('../multer/category')
 const productUpload = require('../multer/productMulter')
+const bannerUpload = require('../multer/banner')
+const bannerCrop = require('../config/crop')
 
 const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categroyController')
-const adminController = require('../controllers/adminController')
+const adminController = require('../controllers/adminController');
+const orderController = require('../controllers/orderController');
 
 
 /* GET users listing. */
@@ -38,7 +41,11 @@ router.get('/orderList',adminController.orderList)
 router.get('/salesToday',adminController.salesToday)
 router.get('/salesWeekly',adminController.salesWeekly)
 router.get('/salesMonthly',adminController.salesMonthly)
-// router.get('/salesYearly',adminController.salesYearly)
+router.get('/salesYearly',adminController.salesYearly)
+router.get('/orderDetailsAdmin',orderController.orderDetailsAdmin)
+router.post('/changeStatus',adminController.changeStatus)
+router.get('/helo',adminController.addBanner)
+router.post('/banner',bannerUpload.single('image'),bannerCrop.bannerCrop,adminController.banner)
 
 
 

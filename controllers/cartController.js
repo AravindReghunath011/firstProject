@@ -10,6 +10,9 @@ module.exports={
     getCartPage:async(req,res)=>{
         try{
             let user = req.session.isLoggedIn
+            if(!user){
+                res.redirect('/login')
+            }else{
             
        
             let oid = new mongodb.ObjectId(user._id)
@@ -28,6 +31,7 @@ module.exports={
                     as:'ProductDetails',
                 }}
             ])
+            console.log(cartProducts);
             let GrandTotal = 0
             
             
@@ -43,13 +47,17 @@ module.exports={
                 
            console.log(cartProducts,'dfghjklkjhgfdfghjkjhgfdfghj');
             res.render('users/cart',{cart:cartProducts,isLoggedIn:req.session.isLoggedIn,GrandTotal})
+        }
         }catch(err){
             console.log(err.message);
         }
-    },
+    }, 
     addToCart:async(req,res)=>{
         try {
             console.log(req.body,'================================================================')
+            if(!req.session.isLoggedIn){
+                res.json({status:'noUser'})
+            }else{
             let userId = req.session.isLoggedIn._id
             
             let userExist = await User.findOne({$and:[{_id:userId},{'cart.productId':req.body.proId}]})
@@ -102,6 +110,7 @@ module.exports={
                 })
 
             }   
+        }
             
         } catch (error) {
             console.log(error.message);
@@ -167,6 +176,10 @@ module.exports={
         let user = req.session.isLoggedIn
         console.log(user._id);
         let oid = new mongodb.ObjectId(user._id)
+        console.log(req.body.addressId);
+        if(!req.body.addressId){
+            res.json({status:false})
+        }else{
         let data = await User.aggregate([
             {
                 $match:{_id:oid}
@@ -188,8 +201,20 @@ module.exports={
             for(products of data[0].cart){
                 console.log(products,'helo');
                 console.log(products.quantity)
-                const updateProduct = await productModel.findByIdAndUpdate(products.productId,{$inc : {unit : -products.quantity}})
+                const unitLeft = await productModel.findById(products.productId)
+                if(products.quantity<=unitLeft.unit){
+                    var stockLeft = true
+                    const updateProduct = await productModel.findByIdAndUpdate(products.productId,{$inc : {unit : -products.quantity}})
+                }else{
+                     stockLeft = false
+                    res.json({status:'outOfStock'})
+                }
+               
         }
+        console.log(stockLeft);
+        if(stockLeft){
+
+        
         
         let newOrder = new orderModel({
             address:data[0].address,
@@ -214,15 +239,16 @@ module.exports={
                 currency: "INR",
                 receipt: newOrder._id,
               }).then((response)=>{
-                res.json({status:'razorpay',order:response})
+                res.json({status:'razorpay',order:response,id:newOrder._id})
                 
               })
         }else if(newOrder.payment == 'cod'){
-            res.json({status:'cod'})
+            res.json({status:'cod',id:newOrder._id})
         }else{
             res.json({status:false})
         }
-        
+    }
+}
         
     },
     verify:(req,res)=>{

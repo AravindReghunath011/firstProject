@@ -221,12 +221,12 @@
                         font-weight: bolder;" class="card-title mb-4">
                             Select Address
                         </h1>
-                        <a href="/address" class="btn btn-info" style="margin-left: 35rem;">Add address</a>
+                        <a href="/addressFromPurchase" class="btn btn-info" style="margin-left: 35rem;">Add address</a>
                        
 
                         <form class="boxed" action="/buy" method="post">
                             <%for(i=0;i<userData.address.length;i++){%>
-                                <input type="radio" class="addressId" id="<%=userData.address[i]._id%>" checked
+                                <input type="radio" required class="addressId" id="<%=userData.address[i]._id%>" checked
                                     name="address" required="true" value="<%=userData.address[i]._id%>">
                                 <label for="<%=userData.address[i]._id%>" class="d-flex">
                                     <%=userData.address[i].name%><br>
@@ -607,8 +607,21 @@
 
             }, success: (response) => {
                 console.log(response.status)
-                
-                if (response.status == 'cod') {
+                if(response.status==false){
+                    Swal.fire({
+                            title: 'Error!!',
+                            text: 'error occured',
+                            icon: 'error',
+                            timer: 5000
+                        }) 
+                }else if(response.status == 'outOfStock'){
+                    Swal.fire({
+                        title: 'Stock!!',
+                        text: "the products is out of stock",
+                        icon: 'fail',
+                        timer: 5000
+                    })
+                }else if (response.status == 'cod') {
                     Swal.fire({
                         title: "Order success",
                         text: "order placed successfully",
@@ -628,7 +641,7 @@
                     });
 
                 }else if(response.status == 'razorpay'){
-                    alert(response.order.id)
+                    
                     var options = {
                             "key": "rzp_test_sPwoxcRC0hnSFO", // Enter the Key ID generated from the Dashboard
                             "amount": response.order.GrandTotal, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -638,10 +651,8 @@
                             "image": "https://example.com/your_logo",
                             "order_id": response.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                             "handler": function (status){
-                                alert(status.razorpay_payment_id);
-                                alert(status.razorpay_order_id);
-                                alert(status.razorpay_signature)
-                                verifyPayment(response.order,status)
+                                
+                                verifyPayment(response.order,status,response.id)
                             },
                             "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
                                 "name": "Gaurav Kumar", //your customer's name
@@ -672,7 +683,7 @@
         })
     }
 
-    function verifyPayment(order,payment){
+    function verifyPayment(order,payment,id){
         $.ajax({
             url:'/verifyPayment',
             method:'post',
@@ -680,6 +691,7 @@
                 order,
                 payment
             },success:(response)=>{
+                
                 if(response.status){
                     Swal.fire({
                         title: "Order success",
@@ -691,7 +703,8 @@
                         reverseButtons: true
                     }).then(function (result) {
                         if (result.value) {
-                            location.href = '/orderDetails?id='+response.id
+                            
+                            location.href = '/orderDetails?id='+id
                             // result.dismiss can be "cancel", "overlay",
                             // "close", and "timer"
                         } else if (result.dismiss === "cancel") {

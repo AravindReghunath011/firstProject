@@ -34,6 +34,10 @@
                 <div class="card border shadow-0">
                     <div class="m-4">
                         <h4 class="card-title mb-4">Your shopping cart</h4>
+                        <%if(!isLoggedIn){%>
+                            <h1>You should login to add products to cart</h1>
+                            <a href="/login" class="btn btn-primary">Login</a>
+                            <%}else{%>
                         
                         <%if(cart){%>
                             <%if(cart.length){%>
@@ -50,7 +54,7 @@
                                                     class="border rounded me-3" style="width: 96px; height: 96px;" />
                                                 <div class="">
                                                     <a href="#" class="nav-link"><%=cart[i].ProductDetails[0].name%></a>
-                                                    <p class="text-muted">Yellow, Jeans</p>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -68,7 +72,7 @@
                                             </div>
                                             <div class="mt-4">
                                                 <%if(cart[i].ProductDetails[0].unit<10){%>
-                                                <p>only <%=cart[i].ProductDetails[0].unit%> products left</p>
+                                                <p class="text-danger">only <%=cart[i].ProductDetails[0].unit%> products left</p>
                                                 <%}%>
                                             </div>
                                         </div>
@@ -98,6 +102,7 @@
                         <%}else{%>
                         <img src="/empty-cart.jpg" alt="">
                             
+                            <%}%>
                             <%}%>
                             <%}%>
                            
@@ -232,8 +237,17 @@
 
 
         function removeProduct(proId){
-           
-            $.ajax({
+            Swal.fire({
+                        title: "Remove Product",
+                        text: "You sure want to remove product form cart",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "NO",
+                        reverseButtons: true
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
                 url:'/removeProductFromCart',
                 method:'post',
                 data:{
@@ -243,14 +257,14 @@
                     console.log(response),'helooo';
                     location.reload()
                     console.log('heloooo');
-                    return confirm(' You sure to remove?')
-                    
-                   
-                        
-                       
-                    
+                    return confirm(' You sure to remove?')      
                 }
             })
+                            
+                        } 
+                    });
+           
+          
         }
 
         

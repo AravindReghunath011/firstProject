@@ -72,7 +72,9 @@
 
     <body>
     <div class="signup-form">
-        <form action="/address" method="post">
+       
+        <form action="/address?status=<%=status%>" method="post">
+       
             <h2>Add NEW ADDRESS</h2>
             <div class="form-group">
                 <select name="country" class="selectpicker countrypicker" data-flag="true" data-default="IN"></select>
@@ -121,7 +123,7 @@
     function validate(){
         document.getElementById('err-msg').innerHTML = ''
         let name = document.getElementById('name').value;
-        const nameRegex = /^[A-Za-z0-9]{1,50}$/
+        const nameRegex = /^(?!\s*$).+/;
 ;
 
         if(nameRegex.test(name)){

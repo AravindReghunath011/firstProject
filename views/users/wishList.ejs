@@ -1,0 +1,163 @@
+<head>
+    <style>
+        .icon-hover-primary:hover {
+            border-color: #3b71ca !important;
+            background-color: white !important;
+        }
+
+        .icon-hover-primary:hover i {
+            color: #3b71ca !important;
+        }
+
+        .icon-hover-danger:hover {
+            border-color: #dc4c64 !important;
+            background-color: white !important;
+        }
+
+        .icon-hover-danger:hover i {
+            color: #dc4c64 !important;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+</head>
+<%- include('../partials/user-header')%>
+
+
+<!-- cart + summary -->
+<section class="bg-light my-5">
+    <div class="container">
+        <div class="row">
+            <!-- cart -->
+            <div class="col-lg">
+                <div class="card border shadow-0">
+                    <div class="m-4">
+                        <h4 class="card-title mb-4">My wishList</h4>
+                        <%if(!isLoggedIn){%>
+                            <h1>you should login to add products to wishlist</h1><br>
+                            <a class="btn btn-primary" href="/login">Login</a>
+                            <%}else{%>
+                        
+                        <%if(wishList){%>
+                            <%if(wishList.length){%>
+                        <%wishList.reverse%>
+                        
+                       
+                        <% for (i=0;i<wishList.length;i++){%>
+                            
+                                <div class="row gy-3 mb-4">
+                                    <div class="col-lg-5">
+                                        <div class="me-lg-5">
+                                            <div class="d-flex">
+                                                <img src="/upload/product/<%=wishList[i].ProductDetails[0].images[0]%>"
+                                                    class="border rounded me-3" style="width: 96px; height: 96px;" />
+                                                <div class="">
+                                                    <a href="#" class="nav-link"><%=wishList[i].ProductDetails[0].name%></a>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-md-4 col-6 mb-3">
+                                            
+                                            <div class="input-group mb-3" style="width: 170px;">
+                                                <%=wishList[i].ProductDetails[0].description%>
+                                            </div>
+                                            <div class="mt-4">
+                                                <%if(wishList[i].ProductDetails[0].unit<10){%>
+                                                <p>only <%=wishList[i].ProductDetails[0].unit%> products left</p>
+                                                <%}%>
+                                            </div>
+                                        </div>
+        
+        
+        
+                                    <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
+                                        <div class="">
+                                            <text class="h6" id='<%=wishList[i].ProductDetails[0]._id%>pro-total'>
+                                                &#8377;<%=wishList[i].ProductDetails[0].promotionalPrice%>
+                                            </text><small>/per item</small> <br />
+                                           
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
+                                        <div class="float-md-end">
+                                            
+                                            <a href="#" class="btn btn-light border text-danger icon-hover-danger" onclick="removeProduct('<%=wishList[i].proId%>')"> Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                        
+                        <%}%>
+                        <%}else{%>
+                        <img src="/empty-wishlist.png" alt="">
+                            
+                            <%}%>
+                            <%}%>
+                            <%}%>
+                           
+
+
+                       
+                    </div>
+
+                   
+                </div>
+            </div>
+            <!-- cart -->
+           
+           
+        </div>
+    </div>
+</section>
+
+
+  <script>
+
+    
+        
+
+
+        function removeProduct(proId){
+            Swal.fire({
+                        title: "Remove Product!!",
+                        text: "You sure want to remove product form wishlist",
+                        icon: "error",
+                        showCancelButton: true,
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        reverseButtons: true
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                url:'/removeProductFromWishList',
+                method:'post',
+                data:{
+                    proId:proId
+                },
+                success:(response)=>{
+                    console.log(response),'helooo';
+                    location.reload()
+                    console.log('heloooo');    
+                }
+            })
+                          
+                        } 
+                    });
+           
+           
+        }
+
+        
+   
+
+    
+  </script>
+<!-- cart + summary -->
+
+
+
+
