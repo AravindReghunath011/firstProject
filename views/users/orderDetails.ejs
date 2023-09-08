@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             
-                            
+                        <a href="/invoice?id=<%=orders._id%>" class="btn btn-primary">invoice</a>
                         </div>
                     </div>
                 </header> <!-- card-header end// -->
@@ -113,19 +113,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <%for(i=0;i<productDetails.length;i++){%>
                                         <tr>
                                             <td>
                                                 <a class="itemside" href="#">
                                                     <div class="left">
-                                                        <img src="/upload/product/<%=productDetails[0].ProductDetails[0].images[0]%>" width="40" height="40" class="img-xs" alt="Item">
+                                                        <img src="/upload/product/<%=productDetails[i].ProductDetails[0].images[0]%>" width="40" height="40" class="img-xs" alt="Item">
                                                     </div>
                                                     <div class="info"> <%=productDetails.name%> </div>
                                                 </a>
                                             </td>
-                                            <td> <%=productDetails[0].ProductDetails[0].promotionalPrice%> </td>
-                                            <td><%=productDetails[0].quantity%></td>
-                                            <td class="text-end"> <%= parseInt(productDetails[0].ProductDetails[0].promotionalPrice) * parseInt(productDetails[0].quantity)%></td>
+                                            <td> <%=productDetails[i].ProductDetails[0].promotionalPrice%> </td>
+                                            <td><%=productDetails[i].quantity%></td>
+                                            <td class="text-end"> <%= parseInt(productDetails[i].ProductDetails[0].promotionalPrice) * parseInt(productDetails[0].quantity)%></td>
                                         </tr>
+                                        <%}%>
                                        
                                     </tbody>
                                 </table>

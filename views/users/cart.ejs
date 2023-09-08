@@ -192,8 +192,8 @@
         }
 
             }else{
-            
-            let proTotal = document.getElementById(proId + 'pro-total').innerHTML;
+             
+         let proTotal = document.getElementById(proId + 'pro-total').innerHTML;
         let price = document.getElementById(proId + 'price').innerHTML;
         proTotal = parseInt(proTotal);
         price = parseInt(price);
@@ -202,7 +202,7 @@
             price = document.getElementById(proId + 'price').innerHTML;
             let GrandTotal = document.getElementById('grand-total').innerHTML
             document.getElementById('grand-total').innerHTML = parseInt(GrandTotal) + parseInt(price);
-        } else {
+        } else if(  quantity >1) {
             document.getElementById(proId + 'pro-total').innerHTML = proTotal - price
             price = document.getElementById(proId + 'price').innerHTML;
             let GrandTotal = document.getElementById('grand-total').innerHTML
@@ -256,8 +256,7 @@
                 success:(response)=>{
                     console.log(response),'helooo';
                     location.reload()
-                    console.log('heloooo');
-                    return confirm(' You sure to remove?')      
+                       
                 }
             })
                             

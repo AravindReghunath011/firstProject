@@ -77,6 +77,7 @@
 
 
       <main class="col-lg-6">
+        <form action="/buyNow?id=<%= product._id %>" method="post">
         <div class="ps-lg-3">
           <h3 class="title text-dark"><%= product.name %>
            
@@ -118,11 +119,11 @@
             </div>
             </div>
           </div>
-          <a onclick="buyNow()" style="background-color: #ff3368; color: #ffff;" class="btn  shadow-0"> Buy now </a>
-          <button href="#" class="btn btn-primary shadow-0 " onclick="addToCart('<%= product._id %>','<%= product.promotionalPrice %>')">  <i class="me-1 fa fa-shopping-basket" ></i> Add to cart </button>
+          <button type="submit" style="background-color: #ff3368; color: #ffff;" class="btn  shadow-0"> Buy now </button>
+          <a href="#" class="btn btn-primary shadow-0 " onclick="addToCart('<%= product._id %>','<%= product.promotionalPrice %>')">  <i class="me-1 fa fa-shopping-basket" ></i> Add to cart </a>
            
         </div>
-      
+      </form>
       </main>
     </div>
   </div>

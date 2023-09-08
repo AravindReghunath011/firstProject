@@ -9,7 +9,7 @@ module.exports={
         
       // Use sharp to read the input image
       sharp(inputFilePath)
-        .resize(1600,500)
+        .resize(1600,800)
         .toFormat('webp')
         .toBuffer((err, processedImageBuffer) => {
           if (err) {

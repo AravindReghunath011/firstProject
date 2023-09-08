@@ -4,6 +4,7 @@ const orderModel = require('../models/orderModel')
 const mongodb = require('mongodb')
 const Razorpay = require('razorpay')
 var instance = new Razorpay({ key_id: 'rzp_test_sPwoxcRC0hnSFO', key_secret: 'FawYUz1dMjHVYWrf9ZEUjOXi' })
+const couponModel = require("../models/couponModel");
 
 
 module.exports={
@@ -144,6 +145,12 @@ module.exports={
     },
     buyProduct:async(req,res)=>{
         let user = req.session.isLoggedIn
+        
+        if(!user){
+            res.redirect('/login') 
+        }else{
+
+        
         let oid = new mongodb.ObjectId(user._id)
         let productDetails =  await User.aggregate([
             {$match:{_id:oid}},
@@ -157,19 +164,24 @@ module.exports={
                 localField:'proId', 
                 foreignField:'_id',
                 as:'ProductDetails',
-            }}
+            }} 
         ])
         let GrandTotal = 0
         for(let i=0;i<productDetails.length;i++){
             let qua = parseInt(productDetails[i].quantity);
             GrandTotal = GrandTotal+(qua*parseInt(productDetails[i].ProductDetails[0].promotionalPrice))
         }
+        console.log(productDetails);
 
         let userData = await User.findById(user._id)
         console.log(userData.address[0 ],'prod');
-        res.render('users/orderPage',{userData,productDetails,GrandTotal})
+        console.log(GrandTotal,'ooooooooooo');
+        let coupons = await couponModel.find({ minPrice: { $lte: GrandTotal } })
+        console.log(coupons);
+        res.render('users/orderPage',{userData,productDetails,GrandTotal,from:'cart',coupons})
+    }
     },
-    makePurchase:async(req,res)=>{
+    makePurchase:async(req,res)=>{ 
         console.log('hrloooooo');
         console.log(req.body,'========================================================');
         req.body.GrandTotal = parseInt(req.body.GrandTotal)
@@ -177,6 +189,9 @@ module.exports={
         console.log(user._id);
         let oid = new mongodb.ObjectId(user._id)
         console.log(req.body.addressId);
+        if(req.body.isWalletUsed == 'used'){
+            let wallet = await User.findByIdAndUpdate(user._id,{$set:{wallet:0}})
+        }
         if(!req.body.addressId){
             res.json({status:false})
         }else{
@@ -195,7 +210,7 @@ module.exports={
         
         console.log(data[0].cart);
         const date = new Date();
-
+        if(req.body.id==0){
 
             
             for(products of data[0].cart){
@@ -220,7 +235,7 @@ module.exports={
             address:data[0].address,
             products:data[0].cart,
             GrandTotal:req.body.GrandTotal,
-            status:0,
+            status:'pending',
             payment:req.body.payment,
             userId:user._id,
             createdOn:date
@@ -235,19 +250,76 @@ module.exports={
 
         if(newOrder.payment == 'razorpay'){
             instance.orders.create({
-                amount: newOrder.GrandTotal,
+                amount: newOrder.GrandTotal*100,
                 currency: "INR",
                 receipt: newOrder._id,
-              }).then((response)=>{
+              }).then((response)=>{ 
+                console.log(response);
                 res.json({status:'razorpay',order:response,id:newOrder._id})
                 
-              })
-        }else if(newOrder.payment == 'cod'){
-            res.json({status:'cod',id:newOrder._id})
-        }else{
-            res.json({status:false})
-        }
+              }) 
+            }else if(newOrder.payment == 'cod'){
+                res.json({status:'cod',id:newOrder._id})
+            }else if(newOrder.payment == 'wallet'){
+                res.json({status:'wallet',id:newOrder._id})
+            }else{
+                res.json({status:false})
+            }
     }
+}else{
+    let oid = new mongodb.ObjectId(req.body.id)
+    let product = await productModel.aggregate([
+        {
+            $match:{_id:oid},
+
+        },{
+            $project:{
+                
+                productId: { $toString: '$_id' },
+                quantity:'1',
+                _id:0,
+                price:'$promotionalPrice'
+            }
+        }
+
+    ])
+     
+    let newOrder = new orderModel({
+        address:data[0].address,
+        products:product,
+        GrandTotal:req.body.GrandTotal,
+        status:'pending',
+        payment:req.body.payment,
+        userId:user._id,
+        createdOn:date
+    })
+    
+    
+
+     
+
+    await newOrder.save()
+
+
+    if(newOrder.payment == 'razorpay'){
+        instance.orders.create({
+            amount: newOrder.GrandTotal*100,
+            currency: "INR",
+            receipt: newOrder._id,
+          }).then((response)=>{ 
+            console.log(response);
+            res.json({status:'razorpay',order:response,id:newOrder._id})
+            
+          }) 
+    }else if(newOrder.payment == 'cod'){
+        res.json({status:'cod',id:newOrder._id})
+    }else if(newOrder.payment == 'wallet'){
+        res.json({status:'wallet',id:newOrder._id})
+    }else{
+        res.json({status:false})
+    }
+
+}
 }
         
     },

@@ -24,7 +24,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+                <img src="//assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -32,33 +32,62 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
-                    <a class="menu-link" href="index.html"> <i class="icon material-icons md-home"></i>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
+    
+                <li class="menu-item has-submenu ">
+                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">category</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="/admin/categories">Categories</a>
+                     
+                    </div>
+                </li>
+    
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-products-list.html"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-products-list.html">Product List</a>
-                        <a href="page-products-grid.html">Product grid</a>
-                        <a href="page-products-grid-2.html">Product grid 2</a>
-                        <a href="page-categories.html">Categories</a>
+                        <a href="/admin/products">Add Products </a>
+                        <a href="/admin/productList">Product List</a>
+                        
+                        
                     </div>
                 </li>
-                <li class="menu-item has-submenu active">
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
+                        <span class="text">Account</span>
+                    </a>
+                    <div class="submenu active">
+                        <a href="/admin/usersList">Users List</a>
+                       
+                    </div>
+                </li>
+                <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
                     <div class="submenu">
-                        <a href="page-orders-1.html">Order list 1</a>
-                        <a href="page-orders-2.html">Order list 2</a>
-                        <a href="page-orders-detail.html" class="active">Order detail</a>
+                        <a href="/admin/orderList">Order list </a>
+                        
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item">
+                    <a class="menu-link" disabled href="/admin/salesToday"> <i class="icon material-icons md-pie_chart"></i>
+                        <span class="text">sales</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/addCoupon"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Coupons </span>
+                    </a>
+                </li>
+                <!-- <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-sellers-cards.html"> <i class="icon material-icons md-store"></i>
                         <span class="text">Sellers</span>
                     </a>
@@ -68,17 +97,7 @@
                         <a href="page-seller-detail.html">Seller profile</a>
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
-                    </div>
-                </li>
+               
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Transactions</span>
@@ -88,16 +107,7 @@
                         <a href="page-transactions-2.html">Transaction 2</a>
                     </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
-                        <span class="text">Account</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-account-login.html">User login</a>
-                        <a href="page-account-register.html">User registration</a>
-                        <a href="page-error-404.html">Error 404</a>
-                    </div>
-                </li>
+               
                 <li class="menu-item">
                     <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
                         <span class="text">Reviews</span>
@@ -106,15 +116,11 @@
                 <li class="menu-item">
                     <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Brands</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Statistics</span>
-                    </a>
-                </li>
+                </li> -->
+               
             </ul>
             <hr>
-            <ul class="menu-aside">
+            <!-- <ul class="menu-aside">
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
                         <span class="text">Settings</span>
@@ -124,12 +130,8 @@
                         <a href="page-settings-2.html">Setting sample 2</a>
                     </div>
                 </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
-            </ul>
+               
+            </ul> -->
             <br>
             <br>
         </nav>
@@ -209,14 +211,27 @@
                         
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <select name="status" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
-                                <%if(order.status==0){%>
+                                <%if(order.status=='pending'){%>
                                 <option selected>pending </option>
-                                <option>completed</option>
-                                <%}else if(order.status==1){%>
-                                <option >pending </option>
-                                <option selected>completed</option>
+                                <option>Delivered</option>
+                                <option> placed</option>
+                                <option> cancelled</option>
+                                
+                                <%}else if(order.status=='Delivered'){%>
+                                    <option >pending </option>
+                                <option selected>Delivered</option>
+                                <option> placed</option>
+                                <option> cancelled</option>
+                                <%}else if(order.status=='placed'){%>
+                                    <option >pending </option>
+                                <option>Delivered</option>
+                                <option selected> placed</option>
+                                <option> cancelled</option>
                                 <%}else{%>
-                                    <option selected>cancelled</option>
+                                    <option >pending </option>
+                                <option>Delivered</option>
+                                <option> placed</option>
+                                <option selected> cancelled</option>
                                 <%}%>
                                 
                                 

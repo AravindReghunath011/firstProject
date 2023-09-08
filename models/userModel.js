@@ -11,6 +11,9 @@ let userModel = new mongoose.Schema({
         type:String,
         required:true,
     },
+    profileImage:{
+        type:String,
+    },
     mobile:{
         type:Number,
         required:true

@@ -6,12 +6,24 @@ let couponModel = new mongoose.Schema({
         type:String,
         required:true,
     },
+    couponCode:{
+        type:String,
+        required:true
+    },
     created:{
-        type:Date(),
+        type:Date,
         required:true
     },
     expiry:{
-        type:Date(),
+        type:Date,
+        required:true
+    },
+    offerPrice:{
+        type:Number,
+        required:true
+    },
+    minPrice:{
+        type:Number,
         required:true
     },
     user:{

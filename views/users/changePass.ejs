@@ -66,6 +66,8 @@
     <div class="signup-form mt-5">
         <form action="/getChangePass" method="post">
         <h3 class="mb-5">Change Password</h3>
+        <p><%= user.email.slice(0, 3) + '*****' + user.email.slice(10) %></p>
+
             
             <div class="form-group">
               <input id="number" type="password" class="form-control" name="password" placeholder="password" required="required">
@@ -73,7 +75,7 @@
             
         
         <div class="form-group">
-                <button onclick="validate()" type="submit" class="btn btn-primary btn-lg">Send Otp</button>
+                <button onclick="validate()" type="submit" class="btn btn-primary btn-lg">Change password</button>
                 
                 <p id="err-msg"></p>
             </div>

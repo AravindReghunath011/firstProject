@@ -94,13 +94,66 @@ module.exports={
     },
     editCategory:async(req,res)=>{
       try{
-        let categoryExist = await categoryModel.find({
-          category: { $regex: new RegExp(req.body.category, 'i') }
+        console.log(req.body,'oo'); 
+        let categoryToEdit = await categoryModel.findById(req.query.id)
+        let categoryExist = await categoryModel.findOne({
+          name: { $regex: new RegExp(req.body.category, 'i') }
       })
       console.log(categoryExist,'kikikiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiki ');
-        if(categoryExist){
+      console.log(categoryToEdit,'kikikiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiki ');
+        if(categoryExist ){
+          console.log('entered');
+          if(categoryExist.name != categoryToEdit.name){
           res.redirect('/admin/categories')
-        }else{
+
+          }else{
+            console.log('yes');
+
+            if(req.file){
+              console.log('entered');
+            (async () => {
+              const rembg = new Rembg({
+                logging: true,
+              });
+          
+              try {
+                // Assuming the uploaded image is stored in 'req.file.path'
+                
+                let input = sharp(req.file.path); 
+                let output = await rembg.remove(input);
+                await output.webp().toFile('./public/upload/category/'+req.file.filename);
+                let newcategory = await categoryModel.findByIdAndUpdate(req.query.id,{
+                  name:req.body.category,
+                  basePrice:req.body.basePrice, 
+                  isListed:1,
+                  image:req.file.filename,
+                  
+                  
+              },{new:true})
+              console.log(newcategory,'=====');
+      
+             
+                
+                
+              } catch (error) {
+                
+                res.status(500).json({ error: 'An error occurred while processing the image.' });
+              }
+            })();
+          }else{
+            let newcategory = await categoryModel.findByIdAndUpdate(req.query.id,{
+              name:req.body.category,
+              basePrice:req.body.basePrice,
+              isListed:1,
+              
+              
+              
+          })
+         
+          }
+
+          }
+        }else {
         console.log(req.query.id);
         console.log(req.file,'req file');
         if(req.file){

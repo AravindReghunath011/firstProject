@@ -91,13 +91,14 @@ module.exports={
     },
     editProduct:async(req,res)=>{
         console.log(req.files);
+        let category = await categoryModel.findOne({name:req.body.category})
         if(req.files.length !== 0){
             console.log(req.query.id);
             console.log('Entered');
             let id = req.query.id
             let product = await productModel.findByIdAndUpdate(id,
                 {name:req.body.name,
-                    category:req.body.category,
+                    category:category._id,
                     description:req.body.description,
                     promotionalPrice:req.body.Pprice,
                     gst:req.body.gst,
@@ -110,7 +111,7 @@ module.exports={
                 console.log('if workedd');
                 res.redirect('/admin/productList')
             }else{
-                console.log('fuck updated');
+                console.log(' updated');
                 res.redirect('/admin/productList')
             }
 
@@ -120,7 +121,7 @@ module.exports={
 
             let product = await productModel.findByIdAndUpdate(id,
                 {name:req.body.name,
-                category:req.body.category,
+                category:category._id,
                 description:req.body.description,
                 promotionalPrice:req.body.Pprice,
                 gst:req.body.gst,

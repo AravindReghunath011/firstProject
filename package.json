@@ -12,6 +12,7 @@
     "cookie-parser": "~1.4.3",
     "crypto": "^1.0.1",
     "debug": "~2.6.0",
+    "easyinvoice": "^3.0.23",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-ejs-layouts": "^2.5.1",
@@ -23,11 +24,14 @@
     "nodemailer": "^6.9.4",
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
+    "pdf-stream": "^1.3.2",
     "razorpay": "^2.9.2",
     "rembg-node": "^2.0.1",
     "serve-favicon": "^2.5.0",
     "session": "^0.1.0",
     "sharp": "^0.32.4",
-    "twilio": "^4.14.1"
+    "stream": "^0.0.2",
+    "twilio": "^4.14.1",
+    "voucher-code-generator": "^1.3.0"
   }
 }

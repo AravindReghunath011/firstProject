@@ -5,12 +5,15 @@ const config = require('../config/config');
 const categoryModel = require('../models/categoryModel');
 const mongodb = require('mongodb')
 const { log } = require('debug/src/browser');
+const bannerModel = require('../models/bannerModel');
+const userModel = require('../models/userModel');
 const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd79a471225b8ac858848f636c');
 
 module.exports ={
     getUserlogin:(req,res)=>{
         res.render('users/login',{err:req.session.loginPassErr,nouser:req.session.noUser})
-        req.session.loginPassErr = false
+        console.log('helo');
+        req.session.loginPassErr = ''
 
     },
     userLogin:async(req,res)=>{        
@@ -29,11 +32,12 @@ module.exports ={
                 }else{
                     req.session.loginPassErr = 'You have been blocked by admin'
                     res.redirect('/login')
+                    res.session.loginPassErr = ''
                     
 
                 }
             }else{
-                req.session.loginPassErr=true
+                req.session.loginPassErr= 'wrong password'
                 res.redirect('/login')
             }
 
@@ -51,9 +55,10 @@ module.exports ={
     },
     getHome:async(req,res)=>{
         let category = await categoryModel.find({}).lean()
-        console.log(category[0].name);
+        let banner = await bannerModel.find()
+        console.log(banner);
         
-        res.render('users/index',{isLoggedIn:req.session.isLoggedIn,category});
+        res.render('users/index',{isLoggedIn:req.session.isLoggedIn,category,banner});
     },
     logout:(req,res)=>{
         req.session.isLoggedIn=false 
@@ -237,8 +242,10 @@ module.exports ={
             res.redirect('/forgetpassOtp')
         }
     },
-    getChangePass:(req,res)=>{
-        res.render('users/changePass')
+    getChangePass:async(req,res)=>{
+        let user = await User.findOne({mobile:req.session.forgetPassMob})
+        console.log(user);
+        res.render('users/changePass',{user})
     },
     changePass:async(req,res)=>{
         let spassword = await bcrypt.hash(req.body.password,10)
@@ -411,6 +418,41 @@ module.exports ={
     addressFromPurchase:(req,res)=>{
         try {
             res.render('users/addressPage',{isLoggedIn :req.session.isLoggedIn,status:0})
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    getEditProfile: async(req,res)=>{
+        try {
+            let user = await userModel.findById(req.session.isLoggedIn._id)
+            console.log(user);
+            res.render('users/editProfile',{user,isLoggedIn:req.session.isLoggedIn})
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    editProfile:async(req,res)=>{
+        try {
+            console.log(req.file);
+            
+            let user = await userModel.findByIdAndUpdate(req.session.isLoggedIn._id,
+                {
+                    name:req.body.name,
+                    number:req.body.number,
+                    profileImage:req.file.filename
+                })
+
+            console.log(user);
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    wallet:async(req,res)=>{
+        try {
+            let user = await User.findById(req.session.isLoggedIn._id)
+
+            res.render('users/wallet',{isLoggedIn:req.session.isLoggedIn,wallet:user.wallet})
         } catch (error) {
             console.log(error.message);
         }

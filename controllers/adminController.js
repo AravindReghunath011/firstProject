@@ -2,7 +2,10 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs')
 const orderModel = require('../models/orderModel');
 const productModel = require('../models/productModel');
+const bannerModel = require('../models/bannerModel')
 const { default: mongoose } = require('mongoose');
+const couponGenerator = require('voucher-code-generator')
+const couponModel = require('../models/couponModel')
 
 module.exports = {
     getadminLogin:(req,res)=>{
@@ -91,7 +94,7 @@ module.exports = {
 
             console.log(order,'gggg');
 
-            res.render('admin/salesReport',{order})
+            res.render('admin/salesReport',{order,sales:'today'})
         
     },
     salesWeekly:async(req,res)=>{
@@ -124,7 +127,7 @@ module.exports = {
 
             console.log(order,'jjjjj');
 
-            res.render('admin/salesReport',{order})
+            res.render('admin/salesReport',{order,sales:'weekly'})
     },salesMonthly:async(req,res)=>{
         const thisMonth = new Date().getMonth() + 1;
         const startofMonth = new Date(
@@ -155,7 +158,7 @@ module.exports = {
         }).sort({ createdOn: -1 });
 
             console.log(order,'yyyyyyyy');
-            res.render('admin/salesReport',{order})
+            res.render('admin/salesReport',{order,sales:'monthly'})
     },
     salesYearly:async(req,res)=>{
         const today = new Date().getFullYear();
@@ -171,26 +174,77 @@ module.exports = {
             }
         }).sort({ createdOn: -1 });
 
-        res.render('admin/salesReport',{order})
+        res.render('admin/salesReport',{order,sales:'yearly'})
     },
     changeStatus:async(req,res)=>{
         console.log(req.query.id);
-        if(req.body.status=='pending'){
-             var status = 0
-        }else if(req.body.status == 'completed'){
-            var status = 1
-        }else{
-            res.redirect('/admin/orderList')    
+        if(req.body.status=='cancelled'){
+            res.redirect('/admin/orderList') 
         }
-        let order = await orderModel.findByIdAndUpdate(req.query.id,{status:status},{new:true})
+        let order = await orderModel.findByIdAndUpdate(req.query.id,{status:req.body.status},{new:true})
         console.log(order);
         res.redirect('/admin/orderList')
     },
     addBanner:(req,res)=>{
-        res.render('admin/addBanner')
+        try {
+            res.render('admin/addBanner')
+        } catch (error) {
+            console.log(error.message);
+        }
     },
-    banner:(req,res)=>{
-        console.log(req.file);
+    banner:async(req,res)=>{
+        try {
+            console.log(req.body);
+            let newBanner = new bannerModel({
+                name:req.body.name,
+                description:req.body.description,
+                image:req.file.filename
+            })
+
+             newBanner.save().then((status)=>{
+                console.log(status);
+                res.redirect('/admin/banner')
+             })
+            
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    getAddCoupon:(req,res)=>{
+        try {
+            res.render('admin/addCoupon')
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    addCoupon: async(req,res)=>{
+        try {
+            let couponCode = couponGenerator.generate({
+                prefix: "promo-",
+                charset: "Aravind"
+            });
+            couponCode = ''+couponCode
+            console.log(req.body);
+            let startDate = new Date(req.body.startDate)
+            let expireDate = new Date(req.body.expireDate)
+            console.log(startDate);
+
+            let newCoupon = new couponModel({
+                name:req.body.name,
+                couponCode:couponCode,
+                created:startDate,
+                expiry:expireDate,
+                offerPrice:req.body.offerPrice,
+                minPrice:req.body.minPrice
+            })
+            await newCoupon.save()
+            console.log(newCoupon);
+            res.redirect('/admin/addCoupon')
+
+        } catch (error) {
+            console.log(error.message);
+        }
     }
     
 

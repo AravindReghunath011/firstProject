@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wallet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/homeStyle.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/shop.css" />
+    <link rel="stylesheet" href="/cartStyle.css" />
+    <link href="/main2.css" rel="stylesheet" type="text/css" />
+
+    <style>
+      .mainDiv {
+        display: flex;
+        min-height: 100%;
+        align-items: center;
+        justify-content: center;
+        background-color: #f9f9f9;
+        font-family: "Open Sans", sans-serif;
+      }
+
+      .cardStyle {
+        width: 500px;
+        border-color: white;
+        background: #fff;
+        padding: 36px 0;
+        border-radius: 4px;
+        margin: 30px 0;
+        box-shadow: 0px 0 2px 0 rgba(0, 0, 0, 0.25);
+      }
+
+      #signupLogo {
+        max-height: 100px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .formTitle {
+        font-weight: 600;
+        margin-top: 20px;
+        color: #2f2d3b;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- header section starts -->
+    <%- include('../partials/user-header')%>
+
+    <!-- content section starts -->
+   
+    <div class="mainDiv">
+      <div class="cardStyle">
+        <div class="d-flex justify-content-center align-items-center">
+          <img
+            src="/wallet.jpg"
+            alt="Admin"
+            class="rounded-circle p-1 img-fluid"
+            width="110"
+          />
+        </div>
+
+        <h4 class="formTitle">Wallet</h4>
+
+        <div class="inputDiv text-center">
+          <h1>&#8377;<%=wallet%></h1>
+        </div>
+        <div class="inputDiv mt-4 d-flex justify-content-center">
+          <div class="code-container w-50 d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-center align-items-center">
+             
+            </div>
+            <!-- <button type="button" class="btn btn-success" id="copyButton" style="height: fit-content; width: fit-content;"><i class="fas fa-copy ml-1 white-text"></i></button> -->
+          </div>
+       </div>
+      </div>
+    </div>
+  
+    <!-- content section starts -->
+
+    <script>
+      document.getElementById("copyButton").addEventListener("click", function () {
+    const couponCode = document.getElementById("couponCode").textContent;
+    copyToClipboard(couponCode);
+    updateCopyButton(); // Update the copy button's appearance
+    $('#modalCoupon').modal('hide'); // Close the modal after copying
+  });
+
+  function updateCopyButton() {
+    const copyButton = document.getElementById("copyButton");
+    copyButton.innerHTML = '<i class="fas fa-check ml-1 white-text"></i>';
+    copyButton.disabled = true; // Disable the button after copying
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+    }
+  }
+    </script>
+  </body>
+</html>

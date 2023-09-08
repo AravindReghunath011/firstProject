@@ -1,0 +1,140 @@
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.css">
+  </head>
+  <%- include('../partials/user-header')%>
+  
+  
+  <section style="background-color: #eee;">
+      <div class="container py-5">
+       
+    <form action="/editProfile" method="post" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-body text-center">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                  class="rounded-circle img-fluid" style="width: 150px;">
+                <h5 class="my-3"><%=user.name%></h5>
+                <p class="text-muted mb-1"><%=user.email%></p>
+                <div class="d-flex justify-content-end mt-4 mb-2">
+                    
+                    <input type="file" name="image">
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Full Name</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="text-muted mb-0" name="name" value="<%=user.name%>">
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Email</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p class="text-muted mb-0"><%=user.email%> </p> 
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Phone</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input class="text-muted mb-0 " name="number" value="<%=user.mobile%>">
+                  </div>
+
+                  
+                </div>
+                <button class="btn btn-primary mt-5  align-items-center" type="submit"> submit</button>
+                <hr>
+               
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="input-upload">
+                  <img src="admin-assets/imgs/theme/upload.svg" alt="" id="imgView1">
+                  <input class="form-control" type="file" name="image" id="input1"
+                      accept="image/png, image/jpeg, image/jpg" required
+                      onchange="viewImage1(event),viewImage(event, 1)">
+              </div>
+              <div class="image-cropper" style="display:none; width: 300px; height: 200px;">
+                  <img src="" id="croppedImg1" alt="">
+                  <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
+              </div>
+          </div>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+    <script>
+     function viewImage1(event) {
+            document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+        }
+
+        function viewImage(event, index) {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                let dataURL = reader.result;
+                let image = document.getElementById('imgView' + index);
+                image.src = dataURL;
+
+                // Initialize Cropper.js on the image
+                let cropper = new Cropper(image, {
+                    aspectRatio:1, // Initial aspect ratio
+                    viewMode: 1,
+                    guides: true,
+                    background: false,
+                    autoCropArea: 1,
+                    zoomable: true
+                });
+
+
+                // Show the image cropper container
+                let cropperContainer = document.querySelector('#croppedImg' + index).parentNode;
+                cropperContainer.style.display = 'block';
+
+                // Update the cropped image when the "Save" button is clicked
+                let saveButton = document.querySelector('#saveButton' + index);
+                saveButton.addEventListener('click', async function () {
+                    let croppedCanvas = cropper.getCroppedCanvas({
+                        width: 487,
+                        height: 203
+                    });
+                    let croppedImage = document.getElementById("croppedImg" + index);
+                    croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+
+                    // Generate a unique name for the cropped image file based on the current timestamp
+                    let timestamp = new Date().getTime();
+                    let fileName = `cropped-img-${timestamp}-${index}.png`;
+
+                    await croppedCanvas.toBlob(blob => {
+                        let input = document.getElementById('input' + index)
+                        let imgFile = new File([blob], fileName, blob)
+                        const fileList = new DataTransfer();
+                        fileList.items.add(imgFile);
+                        input.files = fileList.files
+                    });
+                    // cropperContainer.style.display = 'none';
+                });
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>

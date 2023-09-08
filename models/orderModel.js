@@ -11,7 +11,7 @@ let orderModel = new mongoose.Schema({
         required:true,
     },
     status:{
-        type:Number,
+        type:String,
         default:0
     },
     userId:{
