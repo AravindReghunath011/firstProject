@@ -16,7 +16,7 @@ module.exports={
       let data = await category.find({})
       console.log(data);
       
-        res.render('admin/categories',{data:data,Err:req.session.categoryExist})
+        res.render('admin/categories',{data:data,Err:req.session.categoryExist,uploadErr:req.session.categoryUploadErr})
         
     },
 
@@ -68,7 +68,8 @@ module.exports={
               
             } catch (error) {
               
-              res.status(500).json({ error: 'An error occurred while processing the image.' });
+              req.session.categoryUploadErr = 'Use any other image format'
+              res.redirect('/admin/categories')
             }
           })();
 

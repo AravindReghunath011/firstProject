@@ -119,7 +119,15 @@ module.exports={
         console.log(userData);
         console.log(productDetails,'pppppppppppp'); 
         console.log(GrandTotal);
+
+        if(productDetails[0].unit==0){
+            req.session.stockErr = 'No stock left'
+            res.redirect('/productDetails?id='+productDetails[0]._id)
+        }else{
+            console.log('heheheh');
+        
         res.render('users/orderPage',{userData,productDetails,GrandTotal,from:'productDetails',coupons})
+        }
         }
     },
     applyCoupon: async(req,res)=>{
@@ -135,10 +143,31 @@ module.exports={
     },
     changeStatus:async(req,res)=>{
         try {
+            if(req.body.from == 'user'){
             if(req.body.status == 'All'){
                 console.log(req.body.status);
-                let orders = await orderModel.find({userId:req.session.isLoggedIn._id})
-                console.log(orders,'llllllllll');
+                let oid = new mongodb.ObjectId(req.session.isLoggedIn._id)
+                let orders =  await orderModel.aggregate([
+               
+                    {$match:{userId:oid}},
+                    {$unwind:'$products'},
+                    {$project:{
+                        proId:{'$toObjectId':'$products.productId'},
+                        quantity:'$products.quantity',
+                        GrandTotal:'$GrandTotal',
+                        orderedOn:'$createdOn',
+                        payment:'$payment',
+                        status:'$status'
+                    }},
+                    {$lookup:{
+                        from:'products',
+                        localField:'proId', 
+                        foreignField:'_id',
+                        as:'ProductDetails',
+                    }}
+                   
+                ])
+                
                 res.json({orders})
             }else{
 
@@ -169,6 +198,63 @@ module.exports={
 
            
         }
+    }else{
+        if(req.body.status == 'All'){
+            console.log(req.body.status);
+           
+            let orders =  await orderModel.aggregate([
+           
+                
+                {$unwind:'$products'},
+                {$project:{
+                    proId:{'$toObjectId':'$products.productId'},
+                    quantity:'$products.quantity',
+                    GrandTotal:'$GrandTotal',
+                    orderedOn:'$createdOn',
+                    payment:'$payment',
+                    status:'$status'
+                }},
+                {$lookup:{
+                    from:'products',
+                    localField:'proId', 
+                    foreignField:'_id',
+                    as:'ProductDetails',
+                }}
+               
+            ])
+            
+            res.json({orders})
+        }else{
+
+            let oid = new mongodb.ObjectId(req.session.isLoggedIn._id)
+        console.log(oid,'kkkk');
+        let orders =  await orderModel.aggregate([
+           
+            {$match:{status:req.body.status,}},
+            {$unwind:'$products'},
+            {$project:{
+                proId:{'$toObjectId':'$products.productId'},
+                quantity:'$products.quantity',
+                GrandTotal:'$GrandTotal',
+                orderedOn:'$createdOn',
+                payment:'$payment',
+                status:'$status'
+            }},
+            {$lookup:{
+                from:'products',
+                localField:'proId', 
+                foreignField:'_id',
+                as:'ProductDetails',
+            }}
+           
+        ])
+        console.log(orders,'iiiiiiii');
+        res.json({orders})
+
+       
+    }
+
+    }
                
             
             

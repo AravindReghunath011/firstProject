@@ -8,18 +8,19 @@ module.exports={
       
         
       // Use sharp to read the input image
-      sharp(inputFilePath)
+      sharp(inputFilePath) 
         .resize(1600,800)
         .toFormat('webp')
         .toBuffer((err, processedImageBuffer) => {
           if (err) {
-            console.error('Error while cropping the image:', err);
-            // Handle the error as needed
+            req.session.bannerCropErr  = 'Use any other image format'
+            res.redirect('/admin/banner')
           } else {
             // Save the processed image back to the same file path
             fs.writeFile(inputFilePath, processedImageBuffer, (writeErr) => {
               if (writeErr) {
-                console.error('Error while saving the processed image:', writeErr);
+                req.session.bannerCropErr  = 'Use any other image format'
+                res.redirect('/admin/banner')
                 // Handle the error as needed
               } else {
                 console.log('Image cropped and saved successfully to:', inputFilePath);

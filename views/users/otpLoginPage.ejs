@@ -75,9 +75,16 @@
           
          
         <div class="form-group d-flex justify-content-center">
-                <button onclick="validate()" type="submit" class="btn btn-primary btn-lg ">Send Otp</button>
-                <p id="err-msg"></p>
+          <div>
+            <button onclick="validate()" type="submit" class="btn btn-primary btn-lg ">Send Otp</button>
+            <p class="text-danger" id="err-msg"></p>
+                <%if(err){%>
+                  <p class="text-danger"><%=err%></p>
+                  <%}%>
+          </div>                
+                
             </div>
+            
         </form>
      
     

@@ -3,14 +3,18 @@ const mongodb = require('mongodb')
 const mongoose = require('mongoose')
 
 module.exports = {
-    isLoggedIn:(req,res,next)=>{
+    isLoggedIn:async(req,res,next)=>{
         try {
-            let user = User.findById(req.session.isLoggedIn._id)
+            if(req.session.isLoggedIn){
+            let user = await User.findById(req.session.isLoggedIn._id)
+            console.log(user);
             if(user.isVarified==1){
                 next()
-            }else{
-                res.redirect('/login')
             }
+        }else{
+            console.log('auth else');
+            res.redirect('/login')
+        }
             
         } catch (error) {
             console.log(error.message);

@@ -5,7 +5,7 @@ const productController = require('../controllers/productController')
 const categoryController = require('../controllers/categroyController')
 const cartController = require('../controllers/cartController')
 const orderController = require('../controllers/orderController');
-const profileUpload = require('../multer/banner');
+const profileUpload = require('../multer/profile');
 const orderModel = require('../models/orderModel');
 let auth = require('../auth/userAuth')
 
@@ -26,6 +26,7 @@ router.get('/productDetails',productController.productDetails)
 router.get('/cart',auth.isLoggedIn,cartController.getCartPage) 
 router.get('/profile',auth.isLoggedIn,userController.getProfilePage) 
 router.get('/address',userController.getAddressPage)
+router.get('/addressFromPurchase',userController.addressFromPurchase)
 router.get('/editAddress',userController.getEditAddress)
 router.get('/buy',cartController.buyProduct)
 router.get('/orderDetails',auth.isLoggedIn,orderController.userOrderDetails)
@@ -34,6 +35,7 @@ router.get('/wishList',auth.isLoggedIn,userController.getWishlist)
 router.get('/cancelOrder',auth.isLoggedIn,orderController.cancel)
 router.get('/wallet',auth.isLoggedIn,userController.wallet)
 router.get('/invoice',auth.isLoggedIn,orderController.invoice)
+router.get('/editProfile',auth.isLoggedIn,userController.getEditProfile)
 router.get('/logout',auth.isLoggedIn,userController.logout)
 
 

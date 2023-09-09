@@ -126,15 +126,17 @@
                                     <th scope="col">quantity</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Ordered On</th>
+                                    <th scope="col">Total</th>
                                     <th scope="col" class="text-end"> Action </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
                                 <%for(i=0;i<orders.length;i++){%>
+                                    
                                 <tr>
                                     <td><%=i+1%></td>
-                                    <td><%=orders[i]._id%></td>
+                                    <td><%=orders[i]._id.toString().slice(0,7) %></td>
                                     <td><b><%=orders[i].ProductDetails[0].name%></b></td>
                                     <td><%=orders[i].ProductDetails[0].category%></td>
                                     <td><%=orders[i].payment%></td>
@@ -151,6 +153,7 @@
                                                 <%}%>
                                     </td>
                                     <td><%=orders[i].orderedOn%></td>
+                                    <td>&#8377; <%=orders[i].GrandTotal%></td>
                                     <td class="text-end">
                                         <%if(orders[i].status=='pending'||orders[i].status=='placed'){%>
                                         <div class="dropdown">
@@ -226,23 +229,29 @@
             url: '/changeStatus',
             method: 'post',
             data: {
-                status
+                status:status,
+                from:'user'
             },
             success: (orders) => {
+                alert(orders.orders)
                 
                 $('.table').empty();
                 $('.table').append(`
                 <thead>
                     <tr>
-                        <th>#ID</th>
+                        
+                        <th>#</th>
+                        <th>order ID</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Total</th>
+                        <th scope="col">category</th>
+                        <th scope="col">payment</th>
+                        <th scope="col">quantity</th>
+                       
                         <th scope="col">Status</th>
-                        <th scope="col">Date</th>
+                        <th scope="col">Ordered On</th>
+                        <th scope="col">Total</th>
                         <th scope="col" class="text-end"> Action </th>
-                        <th scope="col" class="text-end"></th>
+                        
                     </tr>
                 </thead>
                 `)
@@ -251,27 +260,36 @@
                     let statusTag='';
                     if(orders.orders[i].status == 'pending'){
                         statusTag = `<span class="badge rounded-pill alert-warning">${orders.orders[i].status}</span>`
-                    }else if(orders.orders[i].status == 'cancled'){
+                    }else if(orders.orders[i].status == 'cancelled'){
                         statusTag = `<span class="badge rounded-pill alert-danger">${orders.orders[i].status}</span>`
-                    }else if(orders.orders[i].status == 'delivered'){
+                    }else if(orders.orders[i].status == 'placed'){
                         statusTag = `<span class="badge rounded-pill alert-primary">${orders.orders[i].status}</span>`
-                    }else if(orders.orders[i].status == 'confirmed'){
+                    }else if(orders.orders[i].status == 'Delivered'){
                         statusTag = `<span class="badge rounded-pill alert-info">${orders.orders[i].status}</span>`
                     }
                     $('.table').append(`
                         <tbody>
                         <tr>
-                            <td>${i+1}</td>
-                            <td>${orders.orders[i].ProductDetails[0].name}</td>
-                            <td>${orders.orders[i].ProductDetails[0].promotionalPrice}</td>
-                            <td>${orders.orders[i].quantity}</td>
-                            <td>${orders.orders[i].GrandTotal}</td>
-                            <td>${statusTag}</td>
-                            <td>${orders.orders[i].orderedOn}</td>
+                            <td>${i + 1}</td>
+<td>${orders.orders[i]._id.toString().slice(0, 7)}</td>
+<td>${orders.orders[i].ProductDetails[0].name}</td>
+<td>${orders.orders[i].ProductDetails[0].category}</td>
+<td>${orders.orders[i].payment}</td>
+<td>${orders.orders[i].quantity}</td>
+<td>${statusTag}</td>
+<td>${orders.orders[i].orderedOn}</td>
+<td>${orders.orders[i].GrandTotal}</td>
+<td class="text-end">
+    <a href="/orderDetails?id=${orders.orders[i]._id}" class="btn btn-md rounded font-sm">Detail</a>
+    
+</td>
+
+                            
+                            
                             
                             </tr>
                         </tbody>
-                    `);
+                    `); 
                 }
             },
             error: function (error) {

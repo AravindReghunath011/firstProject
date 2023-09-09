@@ -13,13 +13,13 @@
           <div class="col-lg-4">
             <div class="card mb-4">
               <div class="card-body text-center">
-                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                <img src="/upload/profile/<%=user.profileImage%>" alt="avatar"
                   class="rounded-circle img-fluid" style="width: 150px;">
                 <h5 class="my-3"><%=user.name%></h5>
                 <p class="text-muted mb-1"><%=user.email%></p>
                 <div class="d-flex justify-content-end mt-4 mb-2">
                     
-                    <input type="file" name="image">
+                    
                   
                 </div>
               </div>
@@ -55,6 +55,19 @@
                     <input class="text-muted mb-0 " name="number" value="<%=user.mobile%>">
                   </div>
 
+                  <div class="card-body">
+                    <div class="input-upload">
+                        <img src="admin-assets/imgs/theme/upload.svg" alt="" id="imgView1">
+                        <input class="form-control" type="file" name="image" id="input1"
+                            accept="image/png, image/jpeg, image/jpg" 
+                            onchange="viewImage1(event),viewImage(event, 1)">
+                    </div>
+                    <div class="image-cropper" style="display:none; width: 300px; height: 200px;">
+                        <img src="" id="croppedImg1" alt="">
+                        <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
+                    </div>
+                </div>
+
                   
                 </div>
                 <button class="btn btn-primary mt-5  align-items-center" type="submit"> submit</button>
@@ -63,18 +76,7 @@
               </div>
             </div>
 
-            <div class="card-body">
-              <div class="input-upload">
-                  <img src="admin-assets/imgs/theme/upload.svg" alt="" id="imgView1">
-                  <input class="form-control" type="file" name="image" id="input1"
-                      accept="image/png, image/jpeg, image/jpg" required
-                      onchange="viewImage1(event),viewImage(event, 1)">
-              </div>
-              <div class="image-cropper" style="display:none; width: 300px; height: 200px;">
-                  <img src="" id="croppedImg1" alt="">
-                  <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
-              </div>
-          </div>
+            
             </div>
           </div>
         </form>

@@ -39,7 +39,7 @@ module.exports = {
         let noOfPages = await User.find().count() /2
         noOfPages = Math.round(noOfPages) 
         console.log(noOfPages);
-        res.render('admin/usersList',{users,noOfPages})
+        res.render('admin/usersList',{users,noOfPages,page})
     },
     blockUser:async(req,res)=>{
         id = req.query.id
@@ -187,7 +187,7 @@ module.exports = {
     },
     addBanner:(req,res)=>{
         try {
-            res.render('admin/addBanner')
+            res.render('admin/addBanner',{err:req.session.bannerCropErr})
         } catch (error) {
             console.log(error.message);
         }

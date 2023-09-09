@@ -72,6 +72,7 @@ module.exports={
                 let quantity = parseInt(req.body.quantity)
                 let existqa = parseInt(productExist.quantity)
                 let newqa = quantity+existqa
+                console.log(newqa);
                 if(newqa>productToCart.unit){
                     console.log('heloooooo99999999');
                     res.json({status:false})
@@ -94,6 +95,10 @@ module.exports={
 
             }else{
                 let product = await productModel.findById(req.body.proId)
+                if(product.unit==0){
+                    res.json({status:false})
+                }else{
+
                 console.log('elsesseeeeeeeeeeeee');
                 let quantity = parseInt(req.body.quantity)
                 await User.findByIdAndUpdate(userId,{
@@ -112,6 +117,8 @@ module.exports={
 
             }   
         }
+    }
+
             
         } catch (error) {
             console.log(error.message);

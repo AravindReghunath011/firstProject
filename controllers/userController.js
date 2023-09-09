@@ -11,9 +11,13 @@ const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd
 
 module.exports ={
     getUserlogin:(req,res)=>{
+        console.log(req.session.loginPassErr,';;;');
+        
         res.render('users/login',{err:req.session.loginPassErr,nouser:req.session.noUser})
+        req.session.loginPassErr = 'helo'
         console.log('helo');
-        req.session.loginPassErr = ''
+        
+        console.log(req.session.loginPassErr,'pp');
 
     },
     userLogin:async(req,res)=>{        
@@ -29,9 +33,11 @@ module.exports ={
                     
                     req.session.isLoggedIn = user
                     res.redirect('/')
+                    
                 }else{
                     req.session.loginPassErr = 'You have been blocked by admin'
                     res.redirect('/login')
+                    console.log('hehe');
                     res.session.loginPassErr = ''
                     
 
@@ -143,7 +149,8 @@ module.exports ={
 
 
     getloginOtpPage:(req,res)=>{
-        res.render('users/otpLoginPage')
+        console.log('helo');
+        res.render('users/otpLoginPage',{err:false})
     },
 
     
@@ -155,7 +162,7 @@ module.exports ={
             req.session.UserLoginOtpEmail = user.email
             res.redirect('/otpPage')
         }else{
-            res.send('Enter valid email')
+            res.render('users/otpLoginPage',{err:'Enter a valid email'})
         }
     },
     getOtpPage:async(req,res)=>{
@@ -435,15 +442,29 @@ module.exports ={
     editProfile:async(req,res)=>{
         try {
             console.log(req.file);
-            
-            let user = await userModel.findByIdAndUpdate(req.session.isLoggedIn._id,
-                {
-                    name:req.body.name,
-                    number:req.body.number,
-                    profileImage:req.file.filename
-                })
+            if(req.file){
+                let user = await userModel.findByIdAndUpdate(req.session.isLoggedIn._id,
+                    {
+                        name:req.body.name,
+                        mobile:req.body.number,
+                        profileImage:req.file.filename
+                    })
 
-            console.log(user);
+            }else{
+                let user = await userModel.findByIdAndUpdate(req.session.isLoggedIn._id,
+                    {
+                        name:req.body.name,
+                        mobile:req.body.number,
+                        
+                    },{new:true})
+                    console.log(user,'oo');
+
+            }
+            
+            
+
+            ;
+            res.redirect('/editProfile')
         } catch (error) {
             console.log(error.message);
         }

@@ -402,13 +402,14 @@
                                     <a onclick="makePurchase(0)" class="btn btn-success w-100 shadow-0 mb-2">
                                         Make Purchase </a>
                                 <%}%>
-
                                 <%if(userData.wallet <GrandTotal && userData.wallet != 0){%>
-                                    <a id="walletButton" onclick="useWallet()" class="btn btn-info w-100 "> use wallet</a>
+                                <a  onclick="useWallet()" class="btn btn-info w-100 walletButton"> use wallet</a>
+                                    
                                     <%}%>
+                                    <p style="display: none;" id="walletId"></p>
                                 
                                 
-                            <a href="#" class="btn btn-light w-100 border mt-2"> Back to shop </a>
+                            <a href="/productList" class="btn btn-light w-100 border mt-2"> Back to shop </a>
                         </div>
                     </div>
                 </div>
@@ -777,8 +778,8 @@
 
                     document.getElementById('Discount').innerText = wallet + offer
                     document.getElementById('TotalPrice').innerText = discount
-                    document.getElementById('walletButton').innerText = 'used'
-                    document.getElementById('walletButton').style.display = 'none'
+                    document.getElementById('walletId').innerText = 'used'
+                    document.getElementsByClassName('walletButton').style.display = 'none'
                     
 
                 }
@@ -788,8 +789,7 @@
     function applyCoupon(){
         let couponCode = document.getElementById('couponCode').value
         let GrandTotal = document.getElementById('TotalPrice').innerText
-        alert(couponCode)
-        alert(GrandTotal)
+       
         $.ajax({
             url:'/applyCoupon',
             method:'post',
@@ -803,6 +803,7 @@
                     document.getElementById('Discount').innerText  = discount + response.offer
                     let couponCode = document.getElementById('couponCode')
                     couponCode.readOnly = true
+                    let apply = document.getElementById('apply').disabled = true
                 
                 }else{
                     Swal.fire({
@@ -850,14 +851,13 @@
         
       
         let GrandTotal = document.getElementById('TotalPrice').innerText
-       
-        GrandTotal = parseInt(GrandTotal)
-      
-        let addressId = $(".addressId:checked").val();
-        let isWalletUsed = document.getElementById('walletButton').value
-        let payment = $(".radio:checked").val();
-        let discount = '<%=userData.wallet%>'
-       
+       GrandTotal = parseInt(GrandTotal)
+       let addressId = $(".addressId:checked").val();
+       alert(document.getElementById('walletId').innerText)
+       let isWalletUsed = document.getElementById('walletId').innerText
+       let payment = $(".radio:checked").val();
+       let discount = '<%=userData.wallet%>'
+
         $.ajax({
             url: '/makePurchase',
             method: 'post',
