@@ -41,11 +41,12 @@
                         <button type="submit" class="btn-brand">search</button>
                     </form>
                     <div class="col-lg-2 col-6 col-md-3">
-                        <select class="form-select">
-                            <option>All category</option>
-                            <option>Electronics</option>
-                            <option>Clothings</option>
-                            <option>Something else</option>
+                        <select class="form-select" id="categorySelect" onchange="categoryFilter()">
+                            <option > All</option>      
+                            <%for(i = 0;i<category.length;i++){%>
+                            <option><%=category[i].name%></option>
+                            <%}%>
+                            
                         </select>
                     </div>
                     <div class="col-lg-2 col-6 col-md-3">
@@ -57,7 +58,7 @@
                     </div>
                 </div>
             </header> <!-- card-header end// -->
-            <div class="row">
+            <div class="row" id="row">
                 <%for(i=0;i<products.length;i++){%>
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="card card-product-grid">
@@ -67,7 +68,7 @@
                                 <a href="" onclick="wishList('<%=products[i]._id%>')" class="me-3 ">
                                     <i class="ti-heart text-danger"></i>
                                 </a>
-                                <a href="/productDetails?id=<%=products[i]._id%>" class="btn btn-sm" style="background-color: #ff3368;">
+                                <a href="/productDetails?id=<%=products[i]._id%>" class="btn btn-sm text-light" style="background-color: #ff3368;">
                                    Shop now
                                 </a>
                                 
@@ -122,8 +123,69 @@
 </html>
 
 <script>
+    function categoryFilter(){
+    let category = document.getElementById('categorySelect').value
+
+        $.ajax({
+            url:'/categoryFilter',
+            method:'post',
+            data:{
+                category:category
+
+            },success:(data)=>{ 
+                $('#row').empty();
+                console.log(data)
+                renderProducts(data.products)
+            }
+        })
+    }
+
+      
+    function createCard(products) {
+        
+
+        return `
+    <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card card-product-grid">
+                        <a href="/productDetails?id=${products._id}" class="img-wrap"> <img style="width: 20rem; height: 15rem;"  src="/upload/product/${products.images[0]}" alt="Product"> </a>
+                        <div class="info-wrap">
+                            <div class="dropdown float-end">
+                                <a href="" onclick="wishList('${products._id}')" class="me-3 ">
+                                    <i class="ti-heart text-danger"></i>
+                                </a>
+                                <a href="/productDetails?id=<${products._id}" class="btn btn-sm" style="background-color: #ff3368;">
+                                   Shop now
+                                </a>
+                                
+                            </div>
+                            <a href="#" class="title">${products.name}</a>
+                            <div class="price mt-1"><small>&#8377; <s>${products.regularPrice}</s></small>
+                                &#8377; ${products.promotionalPrice}</div> <!-- price-wrap.// -->
+                        </div>
+                    </div> <!-- card-product  end// -->
+                </div> 
+    `;
+}
+
+
+  
+
+
+function renderProducts(productss) {
+    let products = productss
+    console.log(productss,'hehe');
+    const productContainer = document.getElementById('row');
+    products.forEach(product => {
+        console.log(product)
+        const card = createCard(product);
+        productContainer.innerHTML += card;
+    });
+}
+
+
+
     function wishList(id){
-        alert(id)
+       
         $.ajax({
             url:'/wishList',
             method:'post',

@@ -10,6 +10,9 @@ let orderModel = new mongoose.Schema({
         type:Number,
         required:true,
     },
+    discount:{
+        type:Number
+    },
     status:{
         type:String,
         default:0

@@ -7,24 +7,29 @@ const mongodb = require('mongodb')
 const { log } = require('debug/src/browser');
 const bannerModel = require('../models/bannerModel');
 const userModel = require('../models/userModel');
-const client = require('twilio')('AC2ce54817f6f67c1a6af9d684612e68ae', '378ea4bd79a471225b8ac858848f636c');
+const productModel = require('../models/productModel');
+const couponGenerator = require('voucher-code-generator')
+const Razorpay = require('razorpay')
+require('dotenv').config()
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
+
+var instance = new Razorpay({ key_id:process.env.KEY_ID, key_secret: process.env.KEY_SECRET })
+
 
 module.exports ={
     getUserlogin:(req,res)=>{
-        console.log(req.session.loginPassErr,';;;');
+      
         
         res.render('users/login',{err:req.session.loginPassErr,nouser:req.session.noUser})
         req.session.loginPassErr = 'helo'
-        console.log('helo');
-        
-        console.log(req.session.loginPassErr,'pp');
+      
 
     },
     userLogin:async(req,res)=>{        
         let user = await User.findOne({email:req.body.email}).lean()
         console.log(user);
         if(user){
-            console.log(user.password);
+        
             bcrypt.compare(req.body.password,user.password).then((status)=>{
                 if(status){
 
@@ -62,9 +67,10 @@ module.exports ={
     getHome:async(req,res)=>{
         let category = await categoryModel.find({}).lean()
         let banner = await bannerModel.find()
-        console.log(banner);
+        let products = await productModel.find().lean()
+        console.log(products[0].name);
         
-        res.render('users/index',{isLoggedIn:req.session.isLoggedIn,category,banner});
+        res.render('users/index',{isLoggedIn:req.session.isLoggedIn,category,banner,products});
     },
     logout:(req,res)=>{
         req.session.isLoggedIn=false 
@@ -80,6 +86,7 @@ module.exports ={
 
     userSignup:async(req,res)=>{
         let emailExist = await User.findOne({email:req.body.email})
+        
         if(emailExist){
 
             req.session.emailExistErr = true
@@ -117,6 +124,11 @@ module.exports ={
         
     },
     getOtp:async(req,res)=>{
+        let couponCode = couponGenerator.generate({
+            length:8
+         });
+         couponCode = couponCode.toString()
+       
         if(req.body.otp.join('')==req.session.otp){
             let spassword = await bcrypt.hash(req.session.signupData.password,10)
                 let use = new User({
@@ -125,14 +137,16 @@ module.exports ={
                     mobile: req.session.signupData.number,
                     password: spassword,
                     isAdmin:0,
-                    isVarified:1
+                    isVarified:1,
+                    referalCode:couponCode
                     
                 })
 
-                await use.save().then((data)=>{
-                    console.log(use.name);
+                 use.save().then(async(data)=>{
+                   
                     req.session.isLoggedIn = use
-                    res.redirect('/')
+                    req.session.from = 'getOtp'
+                    res.redirect('/getReferal')
                     
                 }).catch((err)=>{
                     console.log(err);
@@ -472,12 +486,74 @@ module.exports ={
     wallet:async(req,res)=>{
         try {
             let user = await User.findById(req.session.isLoggedIn._id)
+            console.log(user);
 
-            res.render('users/wallet',{isLoggedIn:req.session.isLoggedIn,wallet:user.wallet})
+            res.render('users/wallet',{isLoggedIn:req.session.isLoggedIn,user})
         } catch (error) {
             console.log(error.message);
         }
+    },
+    addToWallet:(req,res)=>{       
+        try{
+           var options = {
+               amount: req.body.total*100,  
+               currency: "INR",
+               receipt: ""+Date.now()
+             };
+             instance.orders.create(options, function(err, order) {
+               if(err){
+                   console.log("Error while creating order : ",err)
+               }else{
+                   res.json({order:order , razorpay:true})
+               }
+           })
+       }catch(err){
+           console.log(err) 
+           res.send("Cannot add amount into your acccount");
+       }
+    },
+       confirmAddtoWallet:async (req,res)=>{
+        var details=req.body
+        var amount=details['order[order][amount]']/100
+        await User.findByIdAndUpdate(
+                req.session.isLoggedIn._id,
+                { $inc: { wallet: amount }} 
+        )
+    },
+    getReferal:async(req,res)=>{
+        try {
+            res.render('users/referalCode',{from:req.session.from})
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+    referalExist:async(req,res)=>{
+        console.log('helo');
+        console.log(req.body.from);
+        if(req.body.from=='getOtp'){
+            console.log('ifffffff');
+            console.log('helo');
+            let referalCode = await User.findOne({referalCode:req.body.referalCode})
+            console.log(referalCode,'ppp');
+            if(referalCode){
+                console.log(req.session.signupData)
+                let Code = await User.updateOne({referalCode:req.body.referalCode},{$inc:{wallet:5000}})
+                let user = await User.updateOne({email:req.session.signupData.email},{$inc:{wallet:1000}})
+                console.log(user,'okoko');
+                res.json({status:true})
+            }else{
+                res.json({status:false})
+            }
+        }else{
+            {
+            console.log('else');
+            res.json({status:'getHome'})
+        }
+        }
+       
     }
+
  
 
 

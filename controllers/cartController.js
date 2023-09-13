@@ -3,7 +3,8 @@ const productModel = require('../models/productModel');
 const orderModel = require('../models/orderModel')
 const mongodb = require('mongodb')
 const Razorpay = require('razorpay')
-var instance = new Razorpay({ key_id: 'rzp_test_sPwoxcRC0hnSFO', key_secret: 'FawYUz1dMjHVYWrf9ZEUjOXi' })
+require('dotenv').config()
+const instance = new Razorpay({ key_id:process.env.KEY_ID, key_secret: process.env.KEY_SECRET })
 const couponModel = require("../models/couponModel");
 
 
@@ -189,13 +190,13 @@ module.exports={
     }
     },
     makePurchase:async(req,res)=>{ 
-        console.log('hrloooooo');
-        console.log(req.body,'========================================================');
+       
+       
         req.body.GrandTotal = parseInt(req.body.GrandTotal)
         let user = req.session.isLoggedIn
-        console.log(user._id);
+     
         let oid = new mongodb.ObjectId(user._id)
-        console.log(req.body.addressId);
+
         if(req.body.isWalletUsed == 'used'){
             let wallet = await User.findByIdAndUpdate(user._id,{$set:{wallet:0}})
         }
@@ -215,14 +216,13 @@ module.exports={
 
         ]) 
         
-        console.log(data[0].cart);
+   
         const date = new Date();
         if(req.body.id==0){
 
             
             for(products of data[0].cart){
-                console.log(products,'helo');
-                console.log(products.quantity)
+            
                 const unitLeft = await productModel.findById(products.productId)
                 if(products.quantity<=unitLeft.unit){
                     var stockLeft = true
@@ -233,11 +233,11 @@ module.exports={
                 }
                
         }
-        console.log(stockLeft);
+ 
         if(stockLeft){
 
         
-        
+        console.log(req.body.Discount,'ppp');
         let newOrder = new orderModel({
             address:data[0].address,
             products:data[0].cart,
@@ -245,7 +245,9 @@ module.exports={
             status:'pending',
             payment:req.body.payment,
             userId:user._id,
-            createdOn:date
+            createdOn:date,
+            discount:req.body.Discount,
+           
         })
         
         
@@ -253,6 +255,7 @@ module.exports={
          
 
         await newOrder.save()
+        console.log(newOrder,'oo');
 
 
         if(newOrder.payment == 'razorpay'){
@@ -298,7 +301,10 @@ module.exports={
         status:'pending',
         payment:req.body.payment,
         userId:user._id,
-        createdOn:date
+        createdOn:date,
+        discount:req.body.Discount,
+       
+
     })
     
     

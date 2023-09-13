@@ -5,13 +5,12 @@ const sharp = require('sharp');
 const categoryModel = require('../models/categoryModel');
 const { log } = require('debug/src/node');
 const orderModel = require('../models/orderModel');
+const productModel = require('../models/productModel');
 
 
 
 module.exports={
-    getDashboard:(req,res)=>{
-        res.render('admin/admin-dashboard')
-    },
+    
     getCategory:async(req,res)=>{
       let data = await category.find({})
       console.log(data);
@@ -236,5 +235,29 @@ module.exports={
 
     res.render('users/userCategoryList',{categories,isLoggedIn:req.session.isLoggedIn})
     },
+    categoryFilter:async(req,res)=>{
+      try { 
+        if(req.body.category == 'All'){
+        
+        let products = await productModel.find({})
+        res.json({products})
+        console.log(products);
+        console.log(req.body.category);
+
+      }else{
+          let category = await categoryModel.findOne({name:req.body.category})
+
+          let products = await productModel.find({category:category._id})
+        res.json({products})
+        console.log(products);
+        console.log(req.body.category);
+
+        }
+     
+        
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
    
 }

@@ -13,7 +13,7 @@ const orderController = require('../controllers/orderController');
 
 
 /* GET users listing. */
-router.get('/', categoryController.getDashboard);
+router.get('/', adminController.getDashboard);
 router.get('/adminLogin',adminController.getadminLogin)
 router.get('/categories',categoryController.getCategory)
 router.get('/products',productController.getAddproduct)
@@ -34,6 +34,7 @@ router.get('/orderDetailsAdmin',orderController.orderDetailsAdmin)
 router.get('/banner',adminController.addBanner)
 router.get('/addCoupon',adminController.getAddCoupon)
 router.get('/deleteProduct',productController.deleteProduct)
+router.get('/monthly-report',adminController.monthlyreport)
 
 
 

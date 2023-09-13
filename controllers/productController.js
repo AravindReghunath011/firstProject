@@ -63,8 +63,10 @@ module.exports={
             }}
         ])
 
+        let category = await categoryModel.find()
+
         console.log(products,'kkkkkkkkkkkkkkkkkkk');
-        res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn})
+        res.render('users/showProducts',{products,isLoggedIn:req.session.isLoggedIn,category})
     },
     adminProductList:async(req,res)=>{
         let product = await productModel.find({}).lean()

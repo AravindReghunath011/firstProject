@@ -1,0 +1,127 @@
+<style>
+    body {
+      color: #999;
+      background: #fafafa;
+      font-family: 'Roboto', sans-serif;
+    }
+    .form-control {
+      min-height: 41px;
+      box-shadow: none;
+      border-color: #e6e6e6;
+    }
+    .form-control:focus {
+      border-color: #00c1c0;
+    }
+    .form-control, .btn {        
+      border-radius: 3px;
+    }
+    .signup-form {
+      width: 425px;
+      margin: 0 auto;
+      padding: 30px 0;
+    }
+    .signup-form h2 {
+      color: #333;
+      font-weight: bold;
+      margin: 0 0 25px;
+    }
+    .signup-form form {
+      margin-bottom: 15px;
+      background: #fff;
+      border: 1px solid #f4f4f4;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+      padding: 40px 50px;
+    }
+    .signup-form .form-group {
+      margin-bottom: 20px;
+    }
+    .signup-form label {
+      font-weight: normal;
+      font-size: 14px;
+    }
+    .signup-form input[type="checkbox"] {
+      position: relative;
+      top: 1px;
+    }    
+    .signup-form .btn, .signup-form .btn:active {        
+      font-size: 16px;
+      font-weight: bold;
+      background: #00c1c0 !important;
+      border: none;
+      min-width: 140px;
+    }
+    .signup-form .btn:hover, .signup-form .btn:focus {
+      background: #00b3b3 !important;
+    }
+    .signup-form a {
+      color: #00c1c0;
+      text-decoration: none;
+    }	
+    .signup-form a:hover {
+      text-decoration: underline;
+    }
+    </style>
+    </head>
+    <body>
+    <div class="signup-form mt-5">
+        <form >
+        <h3 class="mb-5 text-center">Do you have a Referal Code?</h3>
+            
+            <div class="form-group">
+              <input id="referalCode" type="text" class="form-control" name="referalCode" placeholder="referalCode" required="required">
+            </div>
+            
+        
+            <div class=" d-flex align-items-between mt-5">
+
+                <a onclick="referalExist()"><span  class="btn btn-primary btn-lg me-5">confirm</span></a>
+                <a href="/"><span class="btn btn-primary btn-lg" >No</span></a>
+                <p id="err-msg"></p>
+            </div>
+          
+            
+        </form>
+     
+    
+        
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+  
+    
+    <script>
+        function referalExist(){
+            alert('helo')
+            let referalCode = document.getElementById('referalCode').value
+            alert(referalCode)
+            $.ajax({
+                url:'/referalExist',
+                method:"post",
+                data:{
+                    referalCode,
+                    from:'<%=from%>'
+                },success:(response)=>{
+                    alert('jelo')
+                    if(response.status=='getHome'){
+                      location.href = '/'
+                    }
+                    else if(response.status == true){
+                        Swal.fire({
+                        title: "Success",
+                        text: "Referal bonus has been added to your wallet",
+                        icon: "success",
+                    })
+                    location.href = '/'
+                    }else{
+                        Swal.fire({
+                        title: "Error",
+                        text: "referal code does not exist",
+                        icon: "error",
+                    })
+                    }
+                }
+            })
+        }
+        
+      </script>

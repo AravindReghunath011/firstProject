@@ -36,7 +36,9 @@ router.get('/cancelOrder',auth.isLoggedIn,orderController.cancel)
 router.get('/wallet',auth.isLoggedIn,userController.wallet)
 router.get('/invoice',auth.isLoggedIn,orderController.invoice)
 router.get('/editProfile',auth.isLoggedIn,userController.getEditProfile)
-router.get('/logout',auth.isLoggedIn,userController.logout)
+router.get('/getReferal',userController.getReferal)
+router.get('/logout',userController.logout)
+
 
 
 
@@ -66,6 +68,10 @@ router.post('/editProfile',profileUpload.single('image'),userController.editProf
 router.post('/buyNow',orderController.buyNow)
 router.post('/applyCoupon',orderController.applyCoupon)
 router.post('/changeStatus',orderController.changeStatus)
+router.post('/categoryFilter',categoryController.categoryFilter)
+router.post('/add-money',userController.addToWallet)
+router.post('/confirmAddtoWallet',userController.confirmAddtoWallet)
+router.post('/referalExist',userController.referalExist)
 
 
 

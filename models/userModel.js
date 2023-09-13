@@ -45,6 +45,13 @@ let userModel = new mongoose.Schema({
     }],
     wallet:{
         type:Number,
+        default:0
+    },
+    walletHistory:{
+        type:Array
+    },
+    referalCode:{
+        type:String
     }
     
 });

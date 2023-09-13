@@ -6,8 +6,79 @@ const bannerModel = require('../models/bannerModel')
 const { default: mongoose } = require('mongoose');
 const couponGenerator = require('voucher-code-generator')
 const couponModel = require('../models/couponModel')
+const moment = require('moment')
 
 module.exports = {
+    getDashboard:async(req,res)=>{
+        let orders = await orderModel.find()
+        res.render('admin/admin-dashboard',{orders})
+    },
+    monthlyreport:async(req,res)=>{
+        try {
+            console.log('hleooo');
+          const start = moment().subtract(30, 'days').startOf('day'); // Data for the last 30 days
+          const end = moment().endOf('day');
+          console.log(start);
+          console.log(end);
+      
+          const orderSuccessDetails = await orderModel.find({
+            createdOn: { $gte: start, $lte: end },
+            status: 'pending' 
+          });
+
+          console.log(orderSuccessDetails,';;');
+      
+          const monthlySales = {};
+      
+          orderSuccessDetails.forEach(order => {
+            const monthName = moment(order.createdOn).format('MMMM');
+            if (!monthlySales[monthName]) {
+              monthlySales[monthName] = {
+                revenue: 0,
+                productCount: 0,
+                orderCount: 0,
+                codCount: 0,
+                razorpayCount: 0,
+              };
+            }
+            monthlySales[monthName].revenue += order.GrandTotal;
+            monthlySales[monthName].productCount += orderSuccessDetails.length;
+            monthlySales[monthName].orderCount++;
+      
+            if (order.payment=== 'cod') {
+              monthlySales[monthName].codCount++;
+            } else if (order.payment === 'Razorpay') {
+              monthlySales[monthName].razorpayCount++;
+            } 
+          });
+      
+          const monthlyData = {
+            labels: [],
+            revenueData: [],
+            productCountData: [],
+            orderCountData: [],
+            codCountData: [],
+            razorpayCountData: [],
+          };
+      
+          for (const monthName in monthlySales) {
+            if (monthlySales.hasOwnProperty(monthName)) {
+              monthlyData.labels.push(monthName);
+              monthlyData.revenueData.push(monthlySales[monthName].revenue);
+              monthlyData.productCountData.push(monthlySales[monthName].productCount);
+              monthlyData.orderCountData.push(monthlySales[monthName].orderCount);
+              monthlyData.codCountData.push(monthlySales[monthName].codCount);
+              monthlyData.razorpayCountData.push(monthlySales[monthName].razorpayCount);
+            }
+          }
+          console.log(monthlyData);
+      
+          return res.json(monthlyData);
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: 'An error occurred while generating the monthly report.' });
+        }
+      },
     getadminLogin:(req,res)=>{
         if(req.session.adminLogin){
             res.redirect('/')
